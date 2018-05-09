@@ -34,7 +34,7 @@ const moment = require("moment");
 
 const config = require("./configurations");
 const logger = require("./logger");
-const routes = require("./public/routes.js");
+const routes = require("./routes.js");
 
 const app = express();
 

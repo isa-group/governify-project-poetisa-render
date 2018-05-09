@@ -164,25 +164,25 @@ module.exports = function (grunt) {
 
         //BUILDING AND PUSHING DOCKER IMAGES
         dockerize: {
-            '<my-image-name>-latest': { //CHANGEME: name of the image in dockerhub (without user)
+            'governify-render-latest': { //CHANGEME: name of the image in dockerhub (without user)
                 options: {
                     auth: {
                         email: "DOCKER_HUB_EMAIL",
                         username: "DOCKER_HUB_USERNAME",
                         password: "DOCKER_HUB_PASSWORD"
                     },
-                    name: '<my-image-name>', //CHANGEME: name of the image in dockerhub (without user)
+                    name: 'governify-render', //CHANGEME: name of the image in dockerhub (without user)
                     push: true
                 }
             },
-            '<my-image-name>-version': { //CHANGEME: name of the image in dockerhub (without user)
+            'governify-render-version': { //CHANGEME: name of the image in dockerhub (without user)
                 options: {
                     auth: {
                         email: "DOCKER_HUB_EMAIL",
                         username: "DOCKER_HUB_USERNAME",
                         password: "DOCKER_HUB_PASSWORD"
                     },
-                    name: '<my-image-name>', //CHANGEME: name of the image in dockerhub (without user)
+                    name: 'governify-render', //CHANGEME: name of the image in dockerhub (without user)
                     tag: '<%= pkg.version %>',
                     push: true
                 }
@@ -215,7 +215,7 @@ module.exports = function (grunt) {
     //** HOW YO USE THEM: load env vars -next-> grunt build -next-> grunt release:xxx -next-> grunt deliver */
 
     //BUILD TASK
-    grunt.registerTask('build', ['test','buildOn', 'usebanner']);
+    grunt.registerTask('build', ['test', 'buildOn', 'usebanner']);
 
     //RELEASE TASK
     // already defined. Usage: grunt release:0.0.1" for patch versions; grunt release:0.1.0" for minor versions; grunt release:1.0.0" for major versions

@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require("express");
 const http = require('http');
 const app = express();
@@ -5,7 +7,8 @@ const router = express.Router();
 const path = require('path');
 const fs = require('fs');
 const request = require('request');
-const logger = require("../logger");
+
+const logger = require("./logger");
 
 module.exports = router;
 
@@ -13,13 +16,13 @@ router.get('/', function (req, res) {
     var modelPath = '/index/model.json';
     var viewPath = '/index/view.html';
     var ctrlPath = '/index/controller.js';
-    if (!fs.existsSync('./src/backend/public' + modelPath)) {
+    if (!fs.existsSync('./src/frontend' + modelPath)) {
         logger.info("WARNING: " + modelPath + " don't exists, sending 404...");
         return res.sendStatus(404);
-    } else if (!fs.existsSync('./src/backend/public' + viewPath)) {
+    } else if (!fs.existsSync('./src/frontend' + viewPath)) {
         logger.info("WARNING: " + viewPath + " don't exists, sending 404...");
         return res.sendStatus(404);
-    } else if (!fs.existsSync('./src/backend/public' + ctrlPath)) {
+    } else if (!fs.existsSync('./src/frontend' + ctrlPath)) {
         logger.info("WARNING: " + ctrlPath + " don't exists, sending 404...");
         return res.sendStatus(404);
     } else {
@@ -42,22 +45,22 @@ router.get("/render", function (req, res) {
         function getData(callback) {
             if (model.includes('/index') && view.includes('/index') && ctrl.includes('/index')) {
                 //internal path
-                fs.readFile('./src/backend/public' + ctrl, "utf8", (err, data) => {
+                fs.readFile('./src/frontend' + ctrl, "utf8", (err, data) => {
                     callback(err, data);
                 });
             } else if (model.includes('/renders') && view.includes('/renders') && ctrl.includes('/renders')) {
-                if (!fs.existsSync('./src/backend/public' + model)) {
+                if (!fs.existsSync('./src/frontend' + model)) {
                     logger.info("WARNING: " + model + " don't exists, sending 404...");
                     return res.sendStatus(404);
-                } else if (!fs.existsSync('./src/backend/public' + view)) {
+                } else if (!fs.existsSync('./src/frontend' + view)) {
                     logger.info("WARNING: " + view + " don't exists, sending 404...");
                     return res.sendStatus(404);
-                } else if (!fs.existsSync('./src/backend/public' + ctrl)) {
+                } else if (!fs.existsSync('./src/frontend' + ctrl)) {
                     logger.info("WARNING: " + ctrl + " don't exists, sending 404...");
                     return res.sendStatus(404);
                 } else {
                     //internal path
-                    fs.readFile('./src/backend/public' + ctrl, "utf8", (err, data) => {
+                    fs.readFile('./src/frontend' + ctrl, "utf8", (err, data) => {
                         callback(err, data);
                     });
                 }
