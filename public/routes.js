@@ -10,8 +10,8 @@ module.exports = router;
 
 router.get('/', function (req, res) {
     var modelPath = '/index/model.json';
-    var viewPath = '/index/view.ng';
-    var ctrlPath = '/index/ctrl.ctl';
+    var viewPath = '/index/view.html';
+    var ctrlPath = '/index/controller.js';
     if (!fs.existsSync('./public' + modelPath)) {
         console.log("WARNING: " + modelPath + " don't exists, sending 404...");
         return res.sendStatus(404);
@@ -22,7 +22,7 @@ router.get('/', function (req, res) {
         console.log("WARNING: " + ctrlPath + " don't exists, sending 404...");
         return res.sendStatus(404);
     } else {
-        console.log("Redirecting...");
+        console.log("Redirecting to /render?model=" + modelPath + "&view=" + viewPath + "&ctrl=" + ctrlPath);
         res.redirect('/render?model=' + modelPath + '&view=' + viewPath + '&ctrl=' + ctrlPath);
     }
 });
@@ -40,9 +40,9 @@ router.get("/render", function (req, res) {
 
         function getData(callback) {
             if (model.includes('/index') && view.includes('/index') && ctrl.includes('/index')) {
-                var uri = http + '://' + host + ctrl;
-                request.get(uri, function (err, response, body) {
-                    callback(err,body);
+                //internal path
+                fs.readFile('./public' + ctrl, "utf8", (err, data) => {
+                    callback(err, data);
                 });
             } else if (model.includes('/renders') && view.includes('/renders') && ctrl.includes('/renders')) {
                 if (!fs.existsSync('./public' + model)) {
@@ -55,22 +55,28 @@ router.get("/render", function (req, res) {
                     console.log("WARNING: " + ctrl + " don't exists, sending 404...");
                     return res.sendStatus(404);
                 } else {
-                    var uri = http + '://' + host + ctrl;
-                    request.get(uri, function (err, response, body) {
-                        callback(err,body);
+                    //internal path
+                    fs.readFile('./public' + ctrl, "utf8", (err, data) => {
+                        callback(err, data);
                     });
                 }
             } else {
+                //external path
                 request.get(ctrl, function (err, response, body) {
                     callback(err, body);
                 });
             }
         }
         getData(function (err, body) {
-            if (!err && body) {
+            if (err || !body) {
+                console.log("Error in getData: " + err);
+                console.log("Error body in getData: " + body);
+                res.sendStatus(404);
+            } else if (!err && body) {
+                // console.log("getData OK");
                 res.send("<html ng-app='renderApp'>\n" +
                     "<head>\n" +
-                    "<title>ARenderizer</title>\n" +
+                    "<title>Renderizer</title>\n" +
                     "<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' integrity='sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u' crossorigin='anonymous'>\n" +
                     "<script type='text/javascript' src='bower_components/jquery/dist/jquery.min.js'></script>\n" +
                     "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' integrity='sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa' crossorigin='anonymous'></script>\n" +
@@ -143,8 +149,6 @@ router.get("/render", function (req, res) {
                     "</script>" +
                     "</body>" +
                     "</html>");
-            } else if (err && !body) {
-                res.sendStatus(404);
             }
         });
     }
