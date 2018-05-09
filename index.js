@@ -21,7 +21,7 @@ app.use(fileUpload());
 
 app.options("/*", (req, res, next) => {
     return res.sendStatus(200);
-  });
+});
 
 // For all GET requests, send back index.html
 app.use("/", routes);
@@ -30,5 +30,5 @@ app.use('/', express.static(__dirname + '/public'));
 // Start the app by listening on the default
 // Heroku port
 app.listen(port, () => {
-    console.log("Magic happens on port: " + port);
+    console.log("Listening on port: " + port);
 });
