@@ -1,10 +1,11 @@
-var express = require("express");
-var http = require('http');
-var app = express();
-var router = express.Router();
-var path = require('path');
-var fs = require('fs');
-var request = require('request');
+const express = require("express");
+const http = require('http');
+const app = express();
+const router = express.Router();
+const path = require('path');
+const fs = require('fs');
+const request = require('request');
+const logger = require("../logger");
 
 module.exports = router;
 
@@ -12,17 +13,17 @@ router.get('/', function (req, res) {
     var modelPath = '/index/model.json';
     var viewPath = '/index/view.html';
     var ctrlPath = '/index/controller.js';
-    if (!fs.existsSync('./public' + modelPath)) {
-        console.log("WARNING: " + modelPath + " don't exists, sending 404...");
+    if (!fs.existsSync('./src/backend/public' + modelPath)) {
+        logger.info("WARNING: " + modelPath + " don't exists, sending 404...");
         return res.sendStatus(404);
-    } else if (!fs.existsSync('./public' + viewPath)) {
-        console.log("WARNING: " + viewPath + " don't exists, sending 404...");
+    } else if (!fs.existsSync('./src/backend/public' + viewPath)) {
+        logger.info("WARNING: " + viewPath + " don't exists, sending 404...");
         return res.sendStatus(404);
-    } else if (!fs.existsSync('./public' + ctrlPath)) {
-        console.log("WARNING: " + ctrlPath + " don't exists, sending 404...");
+    } else if (!fs.existsSync('./src/backend/public' + ctrlPath)) {
+        logger.info("WARNING: " + ctrlPath + " don't exists, sending 404...");
         return res.sendStatus(404);
     } else {
-        console.log("Redirecting to /render?model=" + modelPath + "&view=" + viewPath + "&ctrl=" + ctrlPath);
+        logger.info("Redirecting to /render?model=" + modelPath + "&view=" + viewPath + "&ctrl=" + ctrlPath);
         res.redirect('/render?model=' + modelPath + '&view=' + viewPath + '&ctrl=' + ctrlPath);
     }
 });
@@ -41,22 +42,22 @@ router.get("/render", function (req, res) {
         function getData(callback) {
             if (model.includes('/index') && view.includes('/index') && ctrl.includes('/index')) {
                 //internal path
-                fs.readFile('./public' + ctrl, "utf8", (err, data) => {
+                fs.readFile('./src/backend/public' + ctrl, "utf8", (err, data) => {
                     callback(err, data);
                 });
             } else if (model.includes('/renders') && view.includes('/renders') && ctrl.includes('/renders')) {
-                if (!fs.existsSync('./public' + model)) {
-                    console.log("WARNING: " + model + " don't exists, sending 404...");
+                if (!fs.existsSync('./src/backend/public' + model)) {
+                    logger.info("WARNING: " + model + " don't exists, sending 404...");
                     return res.sendStatus(404);
-                } else if (!fs.existsSync('./public' + view)) {
-                    console.log("WARNING: " + view + " don't exists, sending 404...");
+                } else if (!fs.existsSync('./src/backend/public' + view)) {
+                    logger.info("WARNING: " + view + " don't exists, sending 404...");
                     return res.sendStatus(404);
-                } else if (!fs.existsSync('./public' + ctrl)) {
-                    console.log("WARNING: " + ctrl + " don't exists, sending 404...");
+                } else if (!fs.existsSync('./src/backend/public' + ctrl)) {
+                    logger.info("WARNING: " + ctrl + " don't exists, sending 404...");
                     return res.sendStatus(404);
                 } else {
                     //internal path
-                    fs.readFile('./public' + ctrl, "utf8", (err, data) => {
+                    fs.readFile('./src/backend/public' + ctrl, "utf8", (err, data) => {
                         callback(err, data);
                     });
                 }
@@ -69,11 +70,10 @@ router.get("/render", function (req, res) {
         }
         getData(function (err, body) {
             if (err || !body) {
-                console.log("Error in getData: " + err);
-                console.log("Error body in getData: " + body);
+                logger.info("Error in getData: " + err);
+                logger.info("Error body in getData: " + body);
                 res.sendStatus(404);
             } else if (!err && body) {
-                // console.log("getData OK");
                 res.send("<html ng-app='renderApp'>\n" +
                     "<head>\n" +
                     "<title>Renderizer</title>\n" +
