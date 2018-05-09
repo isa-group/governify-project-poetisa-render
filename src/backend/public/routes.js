@@ -77,6 +77,7 @@ router.get("/render", function (req, res) {
                 res.send("<html ng-app='renderApp'>\n" +
                     "<head>\n" +
                     "<title>Renderizer</title>\n" +
+                    "<link rel='shortcut icon' href='./utils/img/favicon.ico'>\n" +
                     "<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' integrity='sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u' crossorigin='anonymous'>\n" +
                     "<script type='text/javascript' src='bower_components/jquery/dist/jquery.min.js'></script>\n" +
                     "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' integrity='sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa' crossorigin='anonymous'></script>\n" +
