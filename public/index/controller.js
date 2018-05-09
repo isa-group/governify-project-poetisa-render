@@ -1,0 +1,1 @@
+$scope.date = new Date().toISOString();
