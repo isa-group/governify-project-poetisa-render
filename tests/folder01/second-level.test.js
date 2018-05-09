@@ -1,8 +1,8 @@
 /*!
-project-template-nodejs 1.1.1, built on: 2018-03-27
+governify-render 1.0.0, built on: 2018-05-09
 Copyright (C) 2018 ISA group
 http://www.isa.us.es/
-https://github.com/isa-group/project-template-nodejs
+https://github.com/isa-group/governify-render#readme
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
