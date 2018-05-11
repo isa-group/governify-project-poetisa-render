@@ -1,9 +1,10 @@
 {
-  "name": "public",
-  "homepage": "https://github.com/TFG1718-ARP/TFG1718-ARP",
-  "authors": [
-    "Alberto Jesus Rodriguez Pulido <albrodpul@gmail.com>"
-  ],
+  "name": "governify-render",
+  "homepage": "https://github.com/isa-group/governify-render",
+  "author": {
+    "name": "ISA group",
+    "web": "http://www.isa.us.es/"
+  },
   "description": "",
   "main": "",
   "license": "MIT",

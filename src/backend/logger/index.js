@@ -42,7 +42,7 @@ var customLevels = {
     error: 'red',
     warning: 'yellow',
     custom: 'magenta',
-    info: 'white',
+    info: 'blue',
     debug: 'black'
   }
 };
