@@ -26,24 +26,28 @@ const router = express.Router();
 const path = require('path');
 const fs = require('fs');
 const request = require('request');
-const yaml = require('js-yaml')
+const jsyaml = require('js-yaml')
 
 const logger = require("./logger");
 
 module.exports = router;
 
 router.get('/', function (req, res) {
-    var modelPath = '/index/model.json';
     var viewPath = '/index/view.html';
     var ctrlPath = '/index/controller.js';
-    if (!fs.existsSync('./src/frontend' + modelPath)) {
-        logger.info("WARNING: " + modelPath + " don't exists, sending 404...");
+    if (fs.existsSync('./src/frontend/index/model.json')) {
+        var modelPath = '/index/model.json';
+    } else if (fs.existsSync('./src/frontend/index/model.yaml')) {
+        var modelPath = '/index/model.yaml';
+    } else {
+        logger.warning(modelPath + " don't exists, sending 404...");
         return res.sendStatus(404);
-    } else if (!fs.existsSync('./src/frontend' + viewPath)) {
-        logger.info("WARNING: " + viewPath + " don't exists, sending 404...");
+    }
+    if (!fs.existsSync('./src/frontend' + viewPath)) {
+        logger.warning(viewPath + " don't exists, sending 404...");
         return res.sendStatus(404);
     } else if (!fs.existsSync('./src/frontend' + ctrlPath)) {
-        logger.info("WARNING: " + ctrlPath + " don't exists, sending 404...");
+        logger.warning(ctrlPath + " don't exists, sending 404...");
         return res.sendStatus(404);
     } else {
         logger.info("Redirecting to /render?model=" + modelPath + "&view=" + viewPath + "&ctrl=" + ctrlPath);
@@ -51,29 +55,92 @@ router.get('/', function (req, res) {
     }
 });
 
-router.get('/yamlToJson', function (req, res) {
-    var yamlModel = req.query.model;
-    //internal model.yaml path
-    if (yamlModel.includes('/renders')) {
-        logger.info("Get internal yaml");
-        var obj = yaml.load(fs.readFileSync('./src/frontend/' + yamlModel, {
-            encoding: 'utf-8'
-        }));
-        res.send(obj);
-    } else {
-        //external model.yaml path
-        logger.info("Get external yaml");
-        function getYaml(callback) {
-            request.get(yamlModel, function (err, response, body) {
-                callback(err, body);
-            });
-        }
-        getYaml(function (err, body) {
-            var obj = yaml.safeLoad(body);
-            res.send(obj);
-        });
+router.get('/dynamicModel', function (req, res) {
+    var model = req.query.model;
+    var yaml;
+    if (model.includes('.json')) {
+        yaml = '.json';
+    } else if (model.includes('.yaml')) {
+        yaml = '.yaml';
     }
+    var location;
+    if (model.includes('/index')) {
+        location = '/index';
+    } else if (model.includes('/renders')) {
+        location = '/renders';
+    }
+    switch (yaml) {
+        case '.yaml':
+            //model.yaml
+            switch (location) {
+                case '/renders':
+                    //internal path renders
+                    logger.info("Model extension: " + yaml + ", path: " + location);
+                    var json = jsyaml.load(fs.readFileSync('./src/frontend/' + model, {
+                        encoding: 'utf-8'
+                    }));
+                    res.send(json);
+                    break;
+                case '/index':
+                    //internal path index
+                    logger.info("Model extension: " + yaml + ", path: " + location);
+                    var json = jsyaml.load(fs.readFileSync('./src/frontend/' + model, {
+                        encoding: 'utf-8'
+                    }));
+                    res.send(json);
+                    break;
+                default:
+                    //external path
+                    logger.info("Model extension: " + yaml + ", path: " + location);
 
+                    function getYaml(callback) {
+                        request.get(model, function (err, response, body) {
+                            callback(err, body);
+                        });
+                    }
+                    getYaml(function (err, body) {
+                        var json = jsyaml.safeLoad(body);
+                        res.send(json);
+                    });
+                    break;
+            }
+            break;
+        case '.json':
+            //model.json
+            switch (location) {
+                case '/renders':
+                    //internal path
+                    logger.info("Model extension: " + yaml + ", path: " + location);
+                    var json = fs.readFileSync('./src/frontend/' + model, {
+                        encoding: 'utf-8'
+                    });
+                    res.send(json);
+                    break;
+                case '/index':
+                    //internal path
+                    logger.info("Model extension: " + yaml + ", path: " + location);
+                    var json = fs.readFileSync('./src/frontend/' + model, {
+                        encoding: 'utf-8'
+                    });
+                    res.send(json);
+                    break;
+                default:
+                    //external path
+                    logger.info("Model extension: " + yaml + ", path: " + location);
+
+                    function getYaml(callback) {
+                        request.get(model, function (err, response, body) {
+                            callback(err, body);
+                        });
+                    }
+                    getYaml(function (err, body) {
+                        var json = body;
+                        res.send(json);
+                    });
+                    break;
+            }
+            break;
+    }
 });
 
 router.get("/render", function (req, res) {
@@ -82,25 +149,37 @@ router.get("/render", function (req, res) {
     var view = req.query.view;
 
     if (!ctrl || !view || !model) {
+        logger.warning("No params");
         res.sendStatus(404);
     } else {
 
         function getData(callback) {
             if (model.includes('/index') && view.includes('/index') && ctrl.includes('/index')) {
-                //internal path
-                logger.info("Checking /index");
-                fs.readFile('./src/frontend' + ctrl, "utf8", (err, data) => {
-                    callback(err, data);
-                });
-            } else if (model.includes('/renders') && view.includes('/renders') && ctrl.includes('/renders')) {
                 if (!fs.existsSync('./src/frontend' + model)) {
-                    logger.warning("WARNING: " + model + " don't exist, sending 404...");
+                    logger.warning(model + " don't exist, sending 404...");
                     return res.sendStatus(404);
                 } else if (!fs.existsSync('./src/frontend' + view)) {
-                    logger.warning("WARNING: " + view + " don't exist, sending 404...");
+                    logger.warning(view + " don't exist, sending 404...");
                     return res.sendStatus(404);
                 } else if (!fs.existsSync('./src/frontend' + ctrl)) {
-                    logger.warning("WARNING: " + ctrl + " don't exist, sending 404...");
+                    logger.warning(ctrl + " don't exist, sending 404...");
+                    return res.sendStatus(404);
+                } else {
+                    //internal path
+                    logger.info("Checking /index");
+                    fs.readFile('./src/frontend' + ctrl, "utf8", (err, data) => {
+                        callback(err, data);
+                    });
+                }
+            } else if (model.includes('/renders') && view.includes('/renders') && ctrl.includes('/renders')) {
+                if (!fs.existsSync('./src/frontend' + model)) {
+                    logger.warning( model + " don't exist, sending 404...");
+                    return res.sendStatus(404);
+                } else if (!fs.existsSync('./src/frontend' + view)) {
+                    logger.warning(view + " don't exist, sending 404...");
+                    return res.sendStatus(404);
+                } else if (!fs.existsSync('./src/frontend' + ctrl)) {
+                    logger.warning(ctrl + " don't exist, sending 404...");
                     return res.sendStatus(404);
                 } else {
                     //internal path
@@ -111,6 +190,7 @@ router.get("/render", function (req, res) {
                 }
             } else {
                 //external path
+                logger.info("External path");
                 request.get(ctrl, function (err, response, body) {
                     callback(err, body);
                 });
@@ -194,21 +274,12 @@ router.get("/render", function (req, res) {
                     "               $compile($('#my-element').html(template).contents())($scope);\n" +
                     "           }, function () {\n\r" +
                     "           });\n\r" +
-                    "           if('" + model + "'.includes('.yaml')){\n" +
-                    "               $http.get('/yamlToJson?model=" + model + "')\n" +
-                    "                   .then(data => {\n" +
-                    "                       $scope.model = data.data;\n" +
+                    "           $http.get('/dynamicModel?model=" + model + "')\n" +
+                    "               .then(data => {\n" +
+                    "                   $scope.model = data.data;\n" +
                     body +
                     "\n\r" +
                     "                   });\n" +
-                    "           }else{\n" +
-                    "               $http.get('" + model + "')\n" +
-                    "                   .then((data) => {\n" +
-                    "                       $scope.model = data.data;\n" +
-                    body +
-                    "\n\r" +
-                    "                   });\n" +
-                    "           }\n\r" +
                     "       });\n" +
                     "</script>\n" +
                     "</body>\n" +
