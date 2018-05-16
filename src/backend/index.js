@@ -31,12 +31,40 @@ const cors = require("cors");
 const helmet = require("helmet");
 const compression = require("compression");
 const moment = require("moment");
+const basicAuth = require('basic-auth');
+
 
 const config = require("./configurations");
 const logger = require("./logger");
-const routes = require("./routes.js");
+
 
 const app = express();
+
+if (config.server.enableHTTPBasicAuth) {
+  logger.info("Adding 'WWW-Authenticate:' header to every path. Check config/env for getting user and pass");
+  app.use((req, res, next) => {
+    let credentials = basicAuth(req);
+    if (!credentials || !check(credentials.name, credentials.pass)) {
+      res.statusCode = 401;
+      res.setHeader('WWW-Authenticate', 'Basic realm="Snapshot Management Login"');
+      res.end('Unauthorized');
+    } else {
+      next();
+    }
+  });
+}
+
+function check(name, pass) {
+  let nameOK = process.env.user || config.auth.user;
+  let passOK = process.env.password || config.auth.password;
+
+  let valid = true;
+  valid = name === nameOK && valid;
+  valid = pass === passOK && valid;
+  return valid;
+}
+
+const routes = require("./routes.js");
 
 app.use(compression());
 
