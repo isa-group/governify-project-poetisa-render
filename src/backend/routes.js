@@ -208,13 +208,13 @@ router.get("/render", function (req, res) {
                     "<title>Renderizer</title>\n" +
                     "<link rel='shortcut icon' href='./utils/img/favicon.ico'>\n" +
                     "<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' integrity='sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u' crossorigin='anonymous'>\n" +
-                    "<script type='text/javascript' src='bower_components/jquery/dist/jquery.min.js'></script>\n" +
+                    "<script type='text/javascript' src='./utils/js/jquery/dist/jquery.min.js'></script>\n" +
                     "<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' integrity='sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa' crossorigin='anonymous'></script>\n" +
-                    "<script type='text/javascript' src='bower_components/angular/angular.js'></script>\n" +
-                    "<script type='text/javascript' src='bower_components/angular-route/angular-route.js'></script>\n" +
-                    "<script type='text/javascript' src='bower_components/angular-ui-router/release/angular-ui-router.js'></script>\n" +
-                    "<script type='text/javascript' src='bower_components/angular-route/angular-route.min.js'></script>\n" +
-                    "<script type='text/javascript' src='bower_components/angular-sanitize/angular-sanitize.min.js'></script>\n" +
+                    "<script type='text/javascript' src='./utils/js/angular/angular.js'></script>\n" +
+                    "<script type='text/javascript' src='./utils/js/angular-route/angular-route.js'></script>\n" +
+                    "<script type='text/javascript' src='./utils/js/angular-ui-router/release/angular-ui-router.js'></script>\n" +
+                    "<script type='text/javascript' src='./utils/js/angular-route/angular-route.min.js'></script>\n" +
+                    "<script type='text/javascript' src='./utils/js/angular-sanitize/angular-sanitize.min.js'></script>\n" +
                     "<script>\n" +
                     "document.addEventListener('DOMContentLoaded', function () {\n\r" +
                     "   console.log('preloader working');\n\r" +
