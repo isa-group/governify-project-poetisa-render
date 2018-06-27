@@ -22,7 +22,7 @@ production:
 
 development:
   server: 
-    port: 8080
+    port: 8088
     timeout: 86400000
     bodySize: 50mb
     bypassCORS: true

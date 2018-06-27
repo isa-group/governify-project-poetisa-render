@@ -1,8 +1,281 @@
 <style>
+    #editorWrapper>div:nth-child(2) {
+        right: 1em;
+        bottom: 1em;
+        display: block;
+    }
+
+    #sco-header {
+        font-family: sans-serif, times;
+        font-size: 1.2em;
+    }
+
+    #sco-tabs-container .nav-tabs {
+        border-bottom: none;
+    }
+
+    #sco-tabs-container .nav-tabs>li.active>a {
+        color: #ffffff;
+        background-color: #428bca;
+        font-family: Arial;
+        font-weight: bold;
+        font-size: 1.2em;
+        padding-bottom: 7px;
+        /* border: 0.17em solid #ddd; */
+    }
+
+    #modelBoardContent>table>tbody>tr:nth-child(1)>td:nth-child(2) {
+        background: #f7f7f7;
+    }
+
+    p.separator {
+        height: 20px;
+    }
+
+    .table {
+        /* margin-top: -1px !important;*/
+        font-family: Arial;
+    }
+
+    #sco-header span[contenteditable],
+    .table span[contenteditable] {
+        border-bottom: 1px dotted black;
+    }
+
+    .table td {
+        border: 1px solid white;
+    }
+
+    .table tr td {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .table tr>td.title,
+    td.caption {
+        font-weight: bold;
+    }
+
+    /* .table tr:nth-child(even)>td.title {
+        background: #428bca;
+        color: white;
+    } */
+
+    /* .table tr:nth-child(odd)>td.title { */
+
+    .table tr>td.title {
+        background: #f7f7f7;
+    }
+
+    /* .table tr:nth-child(2n) {
+        background-color: #ECEFF1;
+    }*/
+
+    .table tr:nth-child(2n) {
+        background-color: #f7f7f7;
+    }
+
+    .table td.description {
+        /* height: 7em; */
+    }
+
+    .no-spacing {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
 </style>
 
 
-<div>
-    <h1>Demo renderizer view.</h1>
-    <h3>Date: {{date}}</h3>
+<div id="sco-header" class="row">
+    <div class="col-xs-12 col-md-5" style="zoom: 0.75;">
+        <div>
+            <h1>
+                Agreement: {{model.id}}
+            </h1>
+        </div>
+    </div>
+</div>
+<div class="pull-right" ng-init="reporterStatus=false;">
+    <a target="_blank" href="http://localhost:30300/dashboard/db/kubernetes-pod-statistics-via-heapster-and-influxdb?orgId=1&from=now%2Fw&to=now&var-ns=default&var-name="
+        class="btn btn-success">
+        Dashboard
+        <span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>
+    </a>
+    <button class="btn btn-warning" ng-click="restart()">Reset values
+        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+    </button>
+
+</div>
+<label>Moth:</label>
+<input type="number" , name="month" ng-model="moth"></input>
+</br>
+<button class="btn btn-primary" ng-click="execute()">Calculate billing
+    <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+</button>
+<div ng-show="isResult" style="margin-top: 40px">
+    <h2>Result: </h2>
+
+    <h3>Percentage discount applied to the bill
+        <strong style="background-color: #d6f5d6">
+            <span contenteditable format="string " ng-model="result.percentage"></span>%
+        </strong>
+    </h3>
+    <!-- messages from the result  -->
+    <!-- <div ng-repeat="message in result.message">
+        <span contenteditable format="string " ng-model="message"></span>
+    </div> -->
+</div>
+<p class=" separator "></p>
+<table class="table ">
+    <tr>
+        <td class="title description">Initial billing day</td>
+        <td colspan="2">
+            <span contenteditable ng-model="model.terms.pricing.billing.initial"></span>
+        </td>
+        <td class="title description">Period</td>
+        <td colspan="2 ">
+            <span contenteditable ng-model="model.terms.pricing.billing.period"></span>
+        </td>
+    </tr>
+</table>
+
+<table <table class="table ">
+    <tr ng-repeat="metric in metricsName ">
+        <td class="title description ">Metric </td>
+        <td colspan="2 ">
+            <span contenteditable ng-model="metric "></span>
+        </td>
+        <td class="title description ">Description </td>
+        <td colspan="2 ">
+            <span contenteditable ng-model="model.terms.metrics[metric].schema.description "></span>
+        </td>
+        <td class="title ">Unit</td>
+        <td colspan="2 ">
+            <!-- {{model.terms.metrics[metric].schema.unit}} -->
+            <select ng-model="model.terms.metrics[metric].schema.unit">
+                <option value="nº">Numeric</option>
+                <option value="%">Percentage </option>
+                <option value="seconds">Seconds</option>
+                <option value="hours">Hours</option>
+                <option value="TB">TB</option>
+                <option value="GB">GB</option>
+            </select>
+        </td>
+    </tr>
+</table>
+
+<div ng-if="isGuarantee()">
+    <table class="table no-spacing ">
+        <tr>
+            <td colspan="2 " style=" text-align: center; font-size: 1.6em; background-color: #f7f7f7; color: black; ">Objectives</td>
+        </tr>
+    </table>
+    <!-- when I have no results  -->
+    <div ng-if="resultMessage.length === 0">
+        <table class="table">
+            <tr ng-repeat="of_i in model.terms.guarantees[guaranteeIndex].of">
+                <td class="title">Objective</td>
+                <td>
+                    <span contenteditable format="string" ng-model="of_i.objective"></span>
+                </td>
+                <!-- <td ng-repeat="with_i in of_i.with "> -->
+                <td class="title">Nodes</td>
+                <td>
+                    <span contenteditable ng-model="of_i.scope.node"></span>
+                </td>
+                <td class="title"> Frequency</td>
+                <td>
+                    <select ng-model="of_i.window.period">
+                        <option value="monthly">Monthly</option>
+                        <option value="quarterly">Quarterly</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <!-- when I have results  -->
+    <div ng-if="resultMessage.length > 0">
+        <table class="table">
+            <tr ng-repeat="of_i in model.terms.guarantees[guaranteeIndex].of">
+                <td class="title" style="background-color: #fee9e7" ng-if="of_i.color">Objective</td>
+                <td style="background-color: #fee9e7" ng-if="of_i.color">
+                    <span contenteditable format="string" ng-model="of_i.objective"></span>
+                </td>
+
+                <td class="title" style="background-color: #fee9e7" ng-if="of_i.color">Nodes</td>
+                <td style="background-color: #fee9e7" ng-if="of_i.color">
+                    <span contenteditable ng-model="of_i.scope.node"></span>
+                </td>
+                <td class="title" style="background-color: #fee9e7" ng-if="of_i.color"> Frequency</td>
+                <td style="background-color: #fee9e7" ng-if="of_i.color">
+                    <select ng-model="of_i.window.period">
+                        <option value="monthly">Monthly</option>
+                        <option value="quarterly">Quarterly</option>
+                    </select>
+                </td>
+
+                <td class="title" style="background-color: #d6f5d6" ng-if="!of_i.color">Objective</td>
+                <td style="background-color: #d6f5d6" ng-if="!of_i.color">
+                    <span contenteditable format="string" ng-model="of_i.objective"></span>
+                </td>
+                <td class="title" style="background-color: #d6f5d6" ng-if="!of_i.color">Nodes</td>
+                <td style="background-color: #d6f5d6" ng-if="!of_i.color">
+                    <span contenteditable ng-model="of_i.scope.node"></span>
+                </td>
+                <td class="title" style="background-color: #d6f5d6" ng-if="!of_i.color"> Frequency</td>
+                <td style="background-color: #d6f5d6" ng-if="!of_i.color">
+                    <select ng-model="of_i.window.period">
+                        <option value="monthly">Monthly</option>
+                        <option value="quarterly">Quarterly</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <table class="table no-spacing ">
+            <tr>
+                <td colspan="2" style="text-align: center; font-size: 1.6em; background-color: #f7f7f7; color: black;">Rewards</td>
+            </tr>
+        </table>
+    </div>
+    <!-- when I have no results -->
+    <div ng-if="resultMessage.length === 0">
+        <table class="table no-spacing">
+            <tr ng-repeat="of_i in model.terms.pricing.billing.rewards[rewardsIndex].of">
+                <td class="title">Condition</td>
+                <td colspan="2">
+                    <span contenteditable format="string " ng-model="of_i.condition"></span>
+                </td>
+                <td class="title ">Value</td>
+                <td colspan="2">
+                    <span contenteditable ng-model="of_i.value "></span>
+                </td>
+            </tr>
+            </tr>
+        </table>
+    </div>
+    <!-- when I have no results -->
+    <div ng-if="resultMessage.length > 0">
+        <table class="table no-spacing">
+            <tr ng-repeat="of_i in model.terms.pricing.billing.rewards[rewardsIndex].of">
+                <td class="title" ng-if="of_i.color" style="background-color: #d6f5d6">Condition </td>
+                <td colspan="2" style="background-color: #d6f5d6" ng-if="of_i.color">
+                    <span contenteditable format="string " ng-model="of_i.condition"></span>
+                </td>
+                <td class="title" ng-if="!of_i.color" style="background-color: #fee9e7">Condition </td>
+                <td colspan="2" ng-if="!of_i.color " style="background-color: #fee9e7">
+                    <span contenteditable format="string " ng-model="of_i.condition"></span>
+                </td>
+                <td class="title" ng-if="of_i.color" style="background-color: #d6f5d6">Value</td>
+                <td colspan="2" style="background-color: #d6f5d6" ng-if="of_i.color">
+                    <span contenteditable ng-model="of_i.value "></span>
+                </td>
+                <td class="title" ng-if="!of_i.color " style="background-color: #fee9e7">Value</td>
+                <td colspan="2" ng-if="!of_i.color " style="background-color: #fee9e7">
+                    <span contenteditable ng-model="of_i.value "></span>
+                </td>
+            </tr>
+        </table>
+    </div>
 </div>
