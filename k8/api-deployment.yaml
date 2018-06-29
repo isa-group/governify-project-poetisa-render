@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: render-poetisa
+  name: render-poetisa
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: render-poetisa
+    spec:
+      containers:
+      - name: render-poetisa
+        image: api_render_poetisa
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+

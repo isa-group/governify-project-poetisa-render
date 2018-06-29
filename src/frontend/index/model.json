@@ -8,7 +8,7 @@
         "consumer": "http://www.juntadeandalucia.es/",
         "validity": {
             "timeZone": "Europe/Madrid",
-            "initial": "2018-06-01T00:00:00.000Z"
+            "initial": "2018-05-01T00:00:00.000Z"
         },
         "definitions": {
             "schemas": {
@@ -19,12 +19,15 @@
                 }
             },
             "scopes": {
-                "service": {
-                    "node": {
-                        "name": "name",
-                        "description": "dentificator for a node in the platform",
-                        "type": "string"
-                    }
+                "node": {
+                    "name": "Node",
+                    "description": "identifier for a node in the platform",
+                    "type": "string"
+                },
+                "impact": {
+                    "name": "Impact",
+                    "description": "the impact of the node on the platform",
+                    "type": "string"
                 }
             }
         },
@@ -38,7 +41,7 @@
             "currency": "EUR",
             "billing": {
                 "period": "monthly",
-                "initial": "2018-06-01T10:35:36.000Z",
+                "initial": "2018-04-28T10:35:36.000Z",
                 "rewards": [{
                     "over": {
                         "BillingDiscount": {
@@ -56,7 +59,7 @@
                         },
                         {
                             "value": "5",
-                            "condition": "CMM < 15"
+                            "condition": "CCN < 15"
                         },
                         {
                             "value": "10",
@@ -99,11 +102,11 @@
             },
             "CCN": {
                 "schema": {
-                    "description": "CPU load",
+                    "description": "Cpu load",
                     "type": "double",
                     "minimum": 0,
                     "maximum": 1,
-                    "unit": "%"
+                    "unit": ""
                 },
                 "computer": "http://localhost:30500/api/v1/CCN"
             },
@@ -130,7 +133,7 @@
             "id": "G_PDN",
             "scope": {
                 "priority": {
-                    "$ref": "#/context/definitions/scopes/priority"
+                    "$ref": "#/context/definitions/scopes/impact"
                 },
                 "node": {
                     "$ref": "#/context/definitions/scopes/node"
@@ -138,36 +141,38 @@
             },
             "of": [{
                     "scope": {
-                        "priority": "P1",
-                        "node": "web, k-mysql"
+                        "node": "k-mysql",
+                        "impact": "high"
                     },
                     "objective": "PDN >= 99.00",
-                    "with": {
-                        "PDN": {
-                            "node": "web,k-mysql"
-                        }
-                    },
                     "window": {
                         "type": "static",
                         "period": "monthly",
-                        "initial": "2018-06-01T00:00:00.000Z"
+                        "initial": "2018-05-01T00:00:00.000Z"
                     }
                 },
                 {
                     "scope": {
-                        "priority": "P1",
-                        "node": "api"
+                        "node": "k-minion1, k-minion2",
+                        "impact": "medium"
                     },
                     "objective": "PDN >= 95.00",
-                    "with": {
-                        "PDN": {
-                            "node": "api"
-                        }
-                    },
                     "window": {
                         "type": "static",
                         "period": "monthly",
-                        "initial": "2018-06-01T00:00:00.000Z"
+                        "initial": "2018-05-01T00:00:00.000Z"
+                    }
+                },
+                {
+                    "scope": {
+                        "node": "k-portal",
+                        "impact": "low"
+                    },
+                    "objective": "PDN >= 90.00",
+                    "window": {
+                        "type": "static",
+                        "period": "monthly",
+                        "initial": "2018-05-01T00:00:00.000Z"
                     }
                 }
             ]
