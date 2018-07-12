@@ -59,7 +59,7 @@
                         },
                         {
                             "value": "5",
-                            "condition": "CCN < 15"
+                            "condition": "CMM < 15"
                         },
                         {
                             "value": "10",
@@ -98,17 +98,17 @@
                     "maximum": 100,
                     "unit": "GB"
                 },
-                "computer": "http://localhost:30500/api/v1/CMM"
+                "computer": "http://10.1.1.202/api/v1/CMM"
             },
             "CCN": {
                 "schema": {
-                    "description": "Cpu load",
+                    "description": "CPU load",
                     "type": "double",
                     "minimum": 0,
                     "maximum": 1,
-                    "unit": ""
+                    "unit": "%"
                 },
-                "computer": "http://localhost:30500/api/v1/CCN"
+                "computer": "http://10.1.1.202/api/v1/CCN"
             },
             "EON": {
                 "schema": {
@@ -118,7 +118,7 @@
                     "maximum": 10,
                     "unit": "TB"
                 },
-                "computer": "http://localhost:30500/api/v1/EON"
+                "computer": "http://10.1.1.202/api/v1/EON"
             },
             "PDN": {
                 "schema": {
@@ -126,7 +126,7 @@
                     "type": "double",
                     "unit": "%"
                 },
-                "computer": "http://localhost:30500/api/v1/PDN"
+                "computer": "http://10.1.1.202/api/v1/PDN"
             }
         },
         "guarantees": [{
@@ -153,7 +153,7 @@
                 },
                 {
                     "scope": {
-                        "node": "k-minion1, k-minion2",
+                        "node": "api-metrics, api-translator",
                         "impact": "medium"
                     },
                     "objective": "PDN >= 95.00",

@@ -106,6 +106,9 @@
     </button>
 
 </div>
+<label>Month:</label>
+<input type="number" , name="month" ng-model="moth"></input>
+</br>
 <button class="btn btn-primary" ng-click="execute()">Calculate billing
     <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
 </button>
@@ -125,7 +128,7 @@
 <p class=" separator "></p>
 <table class="table ">
     <tr>
-        <td class="title description">Date</td>
+        <td class="title description">Initial billing day</td>
         <td colspan="2">
             <span contenteditable ng-model="model.terms.pricing.billing.initial"></span>
         </td>
@@ -171,6 +174,10 @@
     <div ng-if="resultMessage.length === 0">
         <table class="table">
             <tr ng-repeat="of_i in model.terms.guarantees[guaranteeIndex].of">
+                <td class="title">Impact</td>
+                <td>
+                    <span contenteditable format="string" ng-model="of_i.scope.impact"></span>
+                </td>
                 <td class="title">Objective</td>
                 <td>
                     <span contenteditable format="string" ng-model="of_i.objective"></span>
@@ -194,6 +201,10 @@
     <div ng-if="resultMessage.length > 0">
         <table class="table">
             <tr ng-repeat="of_i in model.terms.guarantees[guaranteeIndex].of">
+                <td class="title" style="background-color: #fee9e7" ng-if="of_i.color">Impact</td>
+                <td style="background-color: #fee9e7" ng-if="of_i.color">
+                    <span contenteditable ng-model="of_i.scope.impact"></span>
+                </td>
                 <td class="title" style="background-color: #fee9e7" ng-if="of_i.color">Objective</td>
                 <td style="background-color: #fee9e7" ng-if="of_i.color">
                     <span contenteditable format="string" ng-model="of_i.objective"></span>
@@ -211,6 +222,10 @@
                     </select>
                 </td>
 
+                <td class="title" style="background-color: #d6f5d6" ng-if="!of_i.color">Impact</td>
+                <td style="background-color: #d6f5d6" ng-if="!of_i.color">
+                    <span contenteditable ng-model="of_i.scope.impact"></span>
+                </td>
                 <td class="title" style="background-color: #d6f5d6" ng-if="!of_i.color">Objective</td>
                 <td style="background-color: #d6f5d6" ng-if="!of_i.color">
                     <span contenteditable format="string" ng-model="of_i.objective"></span>

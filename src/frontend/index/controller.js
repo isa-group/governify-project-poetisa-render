@@ -25,9 +25,13 @@ $scope.operators = ["==", "=>", "<=", ">", "<"];
 $scope.result = [];
 $scope.resultMessage = [];
 $scope.resultConditions = [];
-$scope.moth;
+$scope.year;
+$scope.month;
+$scope.day;
+$scope.guarantee = {};
+$scope.reward = {};
 $scope.isResult = false;
-var url = "http://localhost:5050/api/v1/translator";
+var url = "http://10.1.1.206/api/v1/translator";
 
 
 $scope.restart = function () {
@@ -44,8 +48,10 @@ $scope.restart = function () {
 };
 
 $scope.execute = function () {
-    console.log($scope.moth);
-    postUrl(url + "?moth=" + $scope.moth, (JSON.stringify($scope.model)));
+    // console.log("year: " + $scope.year + " month: " + $scope.month + " day: " + $scope.day);
+    var date = $scope.year + "-" + $scope.month + "-" + $scope.day;
+    console.log("date: " + date);
+    postUrl(url + "?date=" + date, (JSON.stringify($scope.model)));
 };
 
 /**
@@ -116,6 +122,15 @@ var updateColors = () => {
     $scope.$apply();
 };
 
+
+$scope.addGuarantee = function () {
+    $scope.guarantee.window.initial = new Date();
+    $scope.guarantee.window.type = "static";
+    console.log("Guarantee: " + $scope.guarantee);
+    $scope.model.terms.guarantees[$scope.guaranteeIndex].of.push($scope.guarantee);
+    $scope.guarantee = {};
+};
+
 $scope.isGuarantee = function () {
     return $scope.metricsName.indexOf($scope.sco) === -1;
 };
@@ -131,4 +146,10 @@ $scope.setGuaranteeIndex = function (sco, guarantees) {
     } else {
         $scope.guaranteeIndex = -1;
     }
+};
+
+$scope.addReward = function () {
+    console.log("Reward: " + $scope.reward);
+    $scope.model.terms.pricing.billing.rewards[$scope.rewardsIndex].of.push($scope.reward);
+    $scope.reward = {};
 };
