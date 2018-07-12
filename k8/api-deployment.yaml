@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: render-poetisa
-        image: api_render_poetisa
+        image: render_poetisa
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
