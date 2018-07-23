@@ -51,46 +51,46 @@
                     "aggregatedBy": "sum",
                     "of": [{
                             "value": "10",
-                            "condition": "CMM < 30"
+                            "condition": "AMC < 30"
                         },
                         {
                             "value": "10",
-                            "condition": "CMM < 20"
+                            "condition": "AMC < 20"
                         },
                         {
                             "value": "5",
-                            "condition": "CMM < 15"
+                            "condition": "AMC < 15"
                         },
                         {
                             "value": "10",
-                            "condition": "CCN < 1"
+                            "condition": "ACL < 1"
                         },
                         {
                             "value": "10",
-                            "condition": "CCN < 0.5"
+                            "condition": "ACL < 0.5"
                         },
                         {
                             "value": "5",
-                            "condition": "CCN < 0.25"
+                            "condition": "ACL < 0.25"
                         },
                         {
                             "value": "10",
-                            "condition": "EON < 2"
+                            "condition": "ODS < 2"
                         },
                         {
                             "value": "10",
-                            "condition": "EON < 1"
+                            "condition": "ODS < 1"
                         },
                         {
                             "value": "5",
-                            "condition": "EON < 0.5"
+                            "condition": "ODS < 0.5"
                         }
                     ]
                 }]
             }
         },
         "metrics": {
-            "CMM": {
+            "AMC": {
                 "schema": {
                     "description": "Average memory consumption",
                     "type": "double",
@@ -98,9 +98,9 @@
                     "maximum": 100,
                     "unit": "GB"
                 },
-                "computer": "http://10.1.1.202/api/v1/CMM"
+                "computer": "http://localhost:5001/api/v2/AMC"
             },
-            "CCN": {
+            "ACL": {
                 "schema": {
                     "description": "CPU load",
                     "type": "double",
@@ -108,9 +108,9 @@
                     "maximum": 1,
                     "unit": "%"
                 },
-                "computer": "http://10.1.1.202/api/v1/CCN"
+                "computer": "http://localhost:5001/api/v2/ACL"
             },
-            "EON": {
+            "ODS": {
                 "schema": {
                     "description": "Occupied disk space",
                     "type": "double",
@@ -118,19 +118,19 @@
                     "maximum": 10,
                     "unit": "TB"
                 },
-                "computer": "http://10.1.1.202/api/v1/EON"
+                "computer": "http://localhost:5001/api/v2/ODS"
             },
-            "PDN": {
+            "AVA": {
                 "schema": {
                     "description": "Occupied disk space",
                     "type": "double",
                     "unit": "%"
                 },
-                "computer": "http://10.1.1.202/api/v1/PDN"
+                "computer": "http://localhost:5001/api/v2/AVA"
             }
         },
         "guarantees": [{
-            "id": "G_PDN",
+            "id": "G_AVA",
             "scope": {
                 "priority": {
                     "$ref": "#/context/definitions/scopes/impact"
@@ -144,7 +144,7 @@
                         "node": "k-mysql",
                         "impact": "high"
                     },
-                    "objective": "PDN >= 99.00",
+                    "objective": "AVA >= 99.00",
                     "window": {
                         "type": "static",
                         "period": "monthly",
@@ -156,7 +156,7 @@
                         "node": "api-metrics, api-translator",
                         "impact": "medium"
                     },
-                    "objective": "PDN >= 95.00",
+                    "objective": "AVA >= 95.00",
                     "window": {
                         "type": "static",
                         "period": "monthly",
@@ -168,7 +168,7 @@
                         "node": "k-portal",
                         "impact": "low"
                     },
-                    "objective": "PDN >= 90.00",
+                    "objective": "AVA >= 90.00",
                     "window": {
                         "type": "static",
                         "period": "monthly",

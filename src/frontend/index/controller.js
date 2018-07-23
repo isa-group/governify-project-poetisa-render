@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 $scope.sco = "G_PDN";
 $scope.guaranteeIndex = 0;
 $scope.rewardsIndex = 0;
-$scope.metricsName = ["PDN", "CMM", "CCN", "EON"];
+$scope.metricsName = ["AVA", "AMC", "ACL", "ODS"];
 $scope.operators = ["==", "=>", "<=", ">", "<"];
 $scope.result = [];
 $scope.resultMessage = [];
@@ -28,21 +28,27 @@ $scope.resultConditions = [];
 $scope.year;
 $scope.month;
 $scope.day;
+$scope.newMetric;
+$scope.metric = {};
 $scope.guarantee = {};
 $scope.reward = {};
 $scope.isResult = false;
-var url = "http://10.1.1.206/api/v1/translator";
+// var url = "http://localhost/api/v1/translator";
+var url = "http://localhost:5050/api/v1/translator";
 
 
 $scope.restart = function () {
-    $scope.sco = "G_PDN";
+    $scope.sco = "G_POETISA";
     $scope.guaranteeIndex = 0;
     $scope.rewardsIndex = 0;
-    $scope.metricsName = ["PDN", "CMM", "CCN", "EON"];
+    $scope.metricsName = ["AVA", "AMC", "ACL", "ODS"];
     $scope.operators = ["==", "=>", "<=", ">", "<"];
     $scope.result = [];
     $scope.resultMessage = [];
     $scope.resultConditions = [];
+    $scope.metric = {};
+    $scope.guarantee = {};
+    $scope.reward = {};
     $scope.isResult = false;
     location.reload(true);
 };
@@ -70,6 +76,7 @@ var postUrl = (url, data, callback) => {
             .replace(/&lt;/g, "<")
             .replace(/&quot;/g, '"');
     }
+    // console.log("data: " + data);
     $.ajax({
         url: url,
         type: "POST",
@@ -86,7 +93,7 @@ var postUrl = (url, data, callback) => {
             updateColors();
         }
     }).fail(function (err) {
-        console.error(err);
+        console.error("URL: " + url + " ERROR: " + JSON.stringify(err));
         if (callback) {
             callback(err);
         }
@@ -152,4 +159,30 @@ $scope.addReward = function () {
     console.log("Reward: " + $scope.reward);
     $scope.model.terms.pricing.billing.rewards[$scope.rewardsIndex].of.push($scope.reward);
     $scope.reward = {};
+};
+
+$scope.addMetric = function () {
+    $scope.metricsName.push($scope.newMetric);
+    var aux = $scope.metric;
+    $scope.model.terms.metrics[$scope.newMetric] = aux;
+    $scope.newMetric = '';
+    $scope.metric = {};
+};
+
+$scope.deleteMetric = function (metric) {
+    var indexMetric = $scope.metricsName.indexOf(metric);
+    $scope.metricsName.splice(indexMetric, 1);
+    delete $scope.model.terms.metrics[metric];
+};
+
+$scope.deleteObjective = function (objective) {
+    console.log(objective.objective);
+    var indexObjective = $scope.model.terms.guarantees[$scope.guaranteeIndex].of.indexOf(objective);
+    $scope.model.terms.guarantees[$scope.guaranteeIndex].of.splice(indexObjective, 1);
+};
+
+$scope.deleteReward = function (reward) {
+    console.log(reward);
+    var indexReward = $scope.model.terms.pricing.billing.rewards[$scope.rewardsIndex].of.indexOf(reward);
+    $scope.model.terms.pricing.billing.rewards[$scope.rewardsIndex].of.splice(indexReward, 1);
 };
