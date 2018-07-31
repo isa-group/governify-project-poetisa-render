@@ -191,9 +191,9 @@
         </strong>
     </h3>
     <!-- messages from the result  -->
-    <!-- <div ng-repeat="message in result.message">
+    <div ng-repeat="message in result.message">
         <span contenteditable format="string " ng-model="message"></span>
-    </div> -->
+    </div>
 </div>
 <p class=" separator "></p>
 <!-- Information of the billing -->
@@ -213,19 +213,27 @@
     </tr>
 </table>
 <!-- Metrics -->
+<table class="table no-spacing">
+    <tr>
+        <td colspan="2" style=" text-align: center; font-size: 1.6em; background-color: #f7f7f7; color: black;"> Metrics
+            <a class="btn btn-primary" data-toggle="collapse" href="#collapseMetric" role="button" aria-expanded="false" aria-controls="collapseMetric">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            </a>
+        </td>
+    </tr>
+</table>
 <table <table class="table ">
     <tr ng-repeat="metric in metricsName ">
         <td class="title description ">Metric </td>
         <td colspan="2 ">
-            <span contenteditable ng-model="metric "></span>
+            <span contenteditable ng-model="metric"></span>
         </td>
         <td class="title description ">Description </td>
         <td colspan="2 ">
-            <span contenteditable ng-model="model.terms.metrics[metric].schema.description "></span>
+            <span contenteditable ng-model="model.terms.metrics[metric].schema.description"></span>
         </td>
         <td class="title ">Unit</td>
         <td colspan="2 ">
-            <!-- {{model.terms.metrics[metric].schema.unit}} -->
             <select ng-model="model.terms.metrics[metric].schema.unit">
                 <option value="nº">Numeric</option>
                 <option value="%">Percentage </option>
@@ -235,14 +243,44 @@
                 <option value="GB">GB</option>
             </select>
         </td>
+        <!--Delete Metrics-->
+        <td>
+            <a class="btn btn-danger" role="button" ng-click="deleteMetric(metric)">
+                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+            </a>
+        </td>
     </tr>
 </table>
+<!-- Add metric -->
+<div class="collapse" id="collapseMetric">
+    <div class="card card-body row">
+
+        <div class="col-sm-3">
+            <input class="form-control" type="text" ng-model="newMetric" placeholder="Metric">
+        </div>
+        <div class="col-sm-3">
+            <input class="form-control" type="text" ng-model="metric.schema.description" placeholder="Description">
+        </div>
+        <div class="col-sm-2">
+            <input class="form-control" type="text" ng-model="metric.schema.unit" placeholder="Unit">
+        </div>
+        <div class="col-sm-3">
+            <input class="form-control" type="text" ng-model="metric.computer" placeholder="Computer">
+        </div>
+        <div class="col-sm-1">
+            <button class="btn btn-primary btn-sm col" role="button" ng-click="addMetric()">
+                Add
+            </button>
+        </div>
+    </div>
+</div>
+<br>
 <!-- Objectives and rewards -->
 <div ng-if="isGuarantee()">
     <!-- Objectives -->
-    <table class="table no-spacing ">
+    <table class="table no-spacing">
         <tr>
-            <td colspan="2 " style=" text-align: center; font-size: 1.6em; background-color: #f7f7f7; color: black; ">Objectives
+            <td colspan="2" style=" text-align: center; font-size: 1.6em; background-color: #f7f7f7; color: black;"> Objectives
                 <a class="btn btn-primary" data-toggle="collapse" href="#collapseGuarantee" role="button" aria-expanded="false" aria-controls="collapseGuarantee">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                 </a>
@@ -278,6 +316,12 @@
                         <option value="quarterly">Quarterly</option>
                     </select>
                 </td>
+                <!--Delete Objective-->
+                <td>
+                    <a class="btn btn-danger" role="button" ng-click="deleteObjective(of_i)">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                    </a>
+                </td>
             </tr>
         </table>
     </div>
@@ -285,45 +329,68 @@
     <div ng-if="resultMessage.length > 0">
         <table class="table">
             <tr ng-repeat="of_i in model.terms.guarantees[guaranteeIndex].of">
-                <td class="title" style="background-color: #fee9e7" ng-if="of_i.color">Impact</td>
-                <td style="background-color: #fee9e7" ng-if="of_i.color">
+                <td class="title" style="background-color: #fee9e7" ng-if="of_i.color === 'red'">Impact</td>
+                <td style="background-color: #fee9e7" ng-if="of_i.color === 'red'">
                     <span contenteditable ng-model="of_i.scope.impact"></span>
                 </td>
-                <td class="title" style="background-color: #fee9e7" ng-if="of_i.color">Objective</td>
-                <td style="background-color: #fee9e7" ng-if="of_i.color">
+                <td class="title" style="background-color: #fee9e7" ng-if="of_i.color === 'red'">Objective</td>
+                <td style="background-color: #fee9e7" ng-if="of_i.color === 'red'">
                     <span contenteditable format="string" ng-model="of_i.objective"></span>
                 </td>
-
-                <td class="title" style="background-color: #fee9e7" ng-if="of_i.color">Nodes</td>
-                <td style="background-color: #fee9e7" ng-if="of_i.color">
+                <td class="title" style="background-color: #fee9e7" ng-if="of_i.color === 'red'">Nodes</td>
+                <td style="background-color: #fee9e7" ng-if="of_i.color === 'red'">
                     <span contenteditable ng-model="of_i.scope.node"></span>
                 </td>
-                <td class="title" style="background-color: #fee9e7" ng-if="of_i.color"> Frequency</td>
-                <td style="background-color: #fee9e7" ng-if="of_i.color">
+                <td class="title" style="background-color: #fee9e7" ng-if="of_i.color === 'red'"> Frequency</td>
+                <td style="background-color: #fee9e7" ng-if="of_i.color === 'red'">
                     <select ng-model="of_i.window.period">
                         <option value="monthly">Monthly</option>
                         <option value="quarterly">Quarterly</option>
                     </select>
                 </td>
-
-                <td class="title" style="background-color: #d6f5d6" ng-if="!of_i.color">Impact</td>
-                <td style="background-color: #d6f5d6" ng-if="!of_i.color">
+                <td class="title" style="background-color: #d6f5d6" ng-if="of_i.color === 'green'">Impact</td>
+                <td style="background-color: #d6f5d6" ng-if="of_i.color === 'green'">
                     <span contenteditable ng-model="of_i.scope.impact"></span>
                 </td>
-                <td class="title" style="background-color: #d6f5d6" ng-if="!of_i.color">Objective</td>
-                <td style="background-color: #d6f5d6" ng-if="!of_i.color">
+                <td class="title" style="background-color: #d6f5d6" ng-if="of_i.color === 'green'">Objective</td>
+                <td style="background-color: #d6f5d6" ng-if="of_i.color === 'green'">
                     <span contenteditable format="string" ng-model="of_i.objective"></span>
                 </td>
-                <td class="title" style="background-color: #d6f5d6" ng-if="!of_i.color">Nodes</td>
-                <td style="background-color: #d6f5d6" ng-if="!of_i.color">
+                <td class="title" style="background-color: #d6f5d6" ng-if="of_i.color === 'green'">Nodes</td>
+                <td style="background-color: #d6f5d6" ng-if="of_i.color === 'green'">
                     <span contenteditable ng-model="of_i.scope.node"></span>
                 </td>
-                <td class="title" style="background-color: #d6f5d6" ng-if="!of_i.color"> Frequency</td>
-                <td style="background-color: #d6f5d6" ng-if="!of_i.color">
+                <td class="title" style="background-color: #d6f5d6" ng-if="of_i.color === 'green'"> Frequency</td>
+                <td style="background-color: #d6f5d6" ng-if="of_i.color === 'green'">
                     <select ng-model="of_i.window.period">
                         <option value="monthly">Monthly</option>
                         <option value="quarterly">Quarterly</option>
                     </select>
+                </td>
+                <td class="title" style="background-color: #f3d4a7" ng-if="of_i.color === 'orange'">Impact</td>
+                <td style="background-color: #f3d4a7" ng-if="of_i.color === 'orange'">
+                    <span contenteditable ng-model="of_i.scope.impact"></span>
+                </td>
+                <td class="title" style="background-color: #f3d4a7" ng-if="of_i.color === 'orange'">Objective</td>
+                <td style="background-color: #f3d4a7" ng-if="of_i.color === 'orange'">
+                    <span contenteditable format="string" ng-model="of_i.objective"></span>
+                </td>
+                <td class="title" style="background-color: #f3d4a7" ng-if="of_i.color === 'orange'">Nodes</td>
+                <td style="background-color: #f3d4a7" ng-if="of_i.color === 'orange'">
+                    <span contenteditable ng-model="of_i.scope.node"></span>
+                </td>
+                <td class="title" style="background-color: #f3d4a7" ng-if="of_i.color === 'orange'"> Frequency</td>
+                <td style="background-color: #f3d4a7" ng-if="of_i.color === 'orange'">
+                    <select ng-model="of_i.window.period">
+                        <option value="monthly">Monthly</option>
+                        <option value="quarterly">Quarterly</option>
+                    </select>
+                </td>
+                <!--Delete Objective-->
+                <td>
+                    <a class="btn btn-danger" role="button" ng-click="deleteObjective()">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                    </a>
                 </td>
             </tr>
         </table>
@@ -365,7 +432,7 @@
     <div>
         <table class="table no-spacing ">
             <tr>
-                <td colspan="2" style="text-align: center; font-size: 1.6em; background-color: #f7f7f7; color: black;">Rewards
+                <td colspan="2" style="text-align: center; font-size: 1.6em; background-color: #f7f7f7; color: black;"> Rewards
                     <a class="btn btn-primary" data-toggle="collapse" href="#collapseReward" role="button" aria-expanded="false" aria-controls="collapseReward">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                     </a>
@@ -375,39 +442,58 @@
     </div>
     <!-- when I have no results -->
     <div ng-if="resultMessage.length === 0">
-        <table class="table no-spacing">
+        <table class="table no-spacing row">
             <tr ng-repeat="of_i in model.terms.pricing.billing.rewards[rewardsIndex].of">
-                <td class="title">Condition</td>
-                <td colspan="2">
+                <td class="title col-lg-3">Condition</td>
+                <td colspan="2" class="col-lg-3">
                     <span contenteditable format="string " ng-model="of_i.condition"></span>
                 </td>
-                <td class="title ">Value</td>
-                <td colspan="2">
+                <td class="title col-lg-3">Value</td>
+                <td colspan="2" class="col-lg-2">
                     <span contenteditable ng-model="of_i.value "></span>
                 </td>
-            </tr>
+                <!--Delete Reward-->
+                <td class="col-lg-1">
+                    <a class="btn btn-danger" role="button" ng-click="deleteReward(of_i)">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                    </a>
+                </td>
             </tr>
         </table>
     </div>
     <!-- when I have results -->
     <div ng-if="resultMessage.length > 0">
-        <table class="table no-spacing">
+        <table class="table no-spacing row">
             <tr ng-repeat="of_i in model.terms.pricing.billing.rewards[rewardsIndex].of">
-                <td class="title" ng-if="of_i.color" style="background-color: #d6f5d6">Condition </td>
-                <td colspan="2" style="background-color: #d6f5d6" ng-if="of_i.color">
+                <td class="title" ng-if="of_i.color === 'green'" style="background-color: #d6f5d6">Condition </td>
+                <td colspan="2" style="background-color: #d6f5d6" ng-if="of_i.color === 'green'">
                     <span contenteditable format="string " ng-model="of_i.condition"></span>
                 </td>
-                <td class="title" ng-if="!of_i.color" style="background-color: #fee9e7">Condition </td>
-                <td colspan="2" ng-if="!of_i.color " style="background-color: #fee9e7">
+                <td class="title" ng-if="of_i.color === 'red'" style="background-color: #fee9e7">Condition </td>
+                <td colspan="2" ng-if="of_i.color === 'red'" style="background-color: #fee9e7">
                     <span contenteditable format="string " ng-model="of_i.condition"></span>
                 </td>
-                <td class="title" ng-if="of_i.color" style="background-color: #d6f5d6">Value</td>
-                <td colspan="2" style="background-color: #d6f5d6" ng-if="of_i.color">
+                <td class="title" ng-if="of_i.color === 'green'" style="background-color: #d6f5d6">Value</td>
+                <td colspan="2" style="background-color: #d6f5d6" ng-if="of_i.color === 'green'">
                     <span contenteditable ng-model="of_i.value "></span>
                 </td>
-                <td class="title" ng-if="!of_i.color " style="background-color: #fee9e7">Value</td>
-                <td colspan="2" ng-if="!of_i.color " style="background-color: #fee9e7">
+                <td class="title" ng-if="of_i.color === 'red'" style="background-color: #fee9e7">Value</td>
+                <td colspan="2" ng-if="of_i.color === 'red'" style="background-color: #fee9e7">
                     <span contenteditable ng-model="of_i.value "></span>
+                </td>
+                <td class="title" ng-if="of_i.color === 'orange'" style="background-color: #f3d4a7">Condition</td>
+                <td colspan="2" style="background-color: #f3d4a7" ng-if="of_i.color === 'orange'">
+                    <span contenteditable ng-model="of_i.condition "></span>
+                </td>
+                <td class="title" ng-if="of_i.color === 'orange'" style="background-color: #f3d4a7">Value</td>
+                <td colspan="2" ng-if="of_i.color === 'orange'" style="background-color: #f3d4a7">
+                    <span contenteditable ng-model="of_i.value "></span>
+                </td>
+                <!--Delete Reward-->
+                <td>
+                    <a class="btn btn-danger" role="button" ng-click="deleteReward()">
+                        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                    </a>
                 </td>
             </tr>
         </table>

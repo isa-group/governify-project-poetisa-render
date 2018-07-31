@@ -122,7 +122,7 @@
             },
             "AVA": {
                 "schema": {
-                    "description": "Occupied disk space",
+                    "description": "Uptime",
                     "type": "double",
                     "unit": "%"
                 },

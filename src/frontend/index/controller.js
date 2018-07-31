@@ -25,6 +25,7 @@ $scope.operators = ["==", "=>", "<=", ">", "<"];
 $scope.result = [];
 $scope.resultMessage = [];
 $scope.resultConditions = [];
+$scope.resultMessageObjectives = []
 $scope.year;
 $scope.month;
 $scope.day;
@@ -46,6 +47,7 @@ $scope.restart = function () {
     $scope.result = [];
     $scope.resultMessage = [];
     $scope.resultConditions = [];
+    $scope.resultMessageObjectives = [];
     $scope.metric = {};
     $scope.guarantee = {};
     $scope.reward = {};
@@ -88,6 +90,9 @@ var postUrl = (url, data, callback) => {
             $scope.result = body[0];
             $scope.result.message.forEach(element => {
                 let res = element.split("->")[1];
+                if (element.split("->")[0] === 'not guarantees ') {
+                    $scope.resultMessageObjectives.push(res);
+                }
                 $scope.resultMessage.push(res);
             });
             updateColors();
@@ -107,22 +112,54 @@ var updateColors = () => {
     // the coloring of the rewards
     $scope.model.terms.pricing.billing.rewards[$scope.rewardsIndex].of.forEach(element => {
         var index = $scope.model.terms.pricing.billing.rewards[$scope.rewardsIndex].of.indexOf(element);
-        $scope.model.terms.pricing.billing.rewards[$scope.rewardsIndex].of[index].color = false;
+        $scope.model.terms.pricing.billing.rewards[$scope.rewardsIndex].of[index].color = 'red';
+        if ($scope.metricsName.indexOf(element.condition.split(" ")[0]) == -1) {
+            $scope.model.terms.pricing.billing.rewards[$scope.rewardsIndex].of[index].color = 'orange';
+            console.log(element.condition);
+        }
         $scope.resultMessage.forEach(value => {
             if (element.condition === value) {
-                $scope.model.terms.pricing.billing.rewards[$scope.rewardsIndex].of[index].color = true;
+                $scope.model.terms.pricing.billing.rewards[$scope.rewardsIndex].of[index].color = 'green';
             }
         });
     });
     //the coloring of the objectives
     $scope.model.terms.guarantees[$scope.guaranteeIndex].of.forEach(element => {
         var index = $scope.model.terms.guarantees[$scope.guaranteeIndex].of.indexOf(element);
-        $scope.model.terms.guarantees[$scope.guaranteeIndex].of[index].color = false;
-        $scope.resultMessage.forEach(value => {
-            let condition = value.split("+")[0];
-            condition = condition + " " + value.split(" ")[1] + " " + value.split(" ")[2];
-            if (element.objective === condition) {
-                $scope.model.terms.guarantees[$scope.guaranteeIndex].of[index].color = true;
+        $scope.model.terms.guarantees[$scope.guaranteeIndex].of[index].color = 'green';
+        // if ($scope.metricsName.indexOf(element.objective.split(" ")[0]) == -1) {
+        //     $scope.model.terms.guarantees[$scope.guaranteeIndex].of[index].color = 'orange';
+        //     console.log(element.objective);
+        // }
+        $scope.resultMessageObjectives.forEach(value => {
+            var nodes = element.scope.node.split(",");
+            if (nodes.length === 1) {
+                var objective = element.objective.split(" ")[0] + "+" + nodes[0] + " " + element.objective.split(" ")[1] + " " + element.objective.split(" ")[2];
+                objective = objective.replace(/&amp;/g, "&")
+                    .replace(/&gt;/g, ">")
+                    .replace(/&lt;/g, "<")
+                    .replace(/&quot;/g, '"');
+                console.log(objective);
+                // let condition = value.split("+")[0];
+                // condition = condition + " " + value.split(" ")[1] + " " + value.split(" ")[2];
+                if (objective === value) {
+                    $scope.model.terms.guarantees[$scope.guaranteeIndex].of[index].color = 'red';
+                }
+            } else {
+                var count = 0;
+                nodes.forEach(node => {
+                    var objective = element.objective.split(" ")[0] + "+" + node + " " + element.objective.split(" ")[1] + " " + element.objective.split(" ")[2];
+                    objective = objective.replace(/&amp;/g, "&")
+                        .replace(/&gt;/g, ">")
+                        .replace(/&lt;/g, "<")
+                        .replace(/&quot;/g, '"');
+                    if (objective === value) {
+                        count += 1;
+                    }
+                });
+                if (count > 0) {
+                    $scope.model.terms.guarantees[$scope.guaranteeIndex].of[index].color = 'red';
+                }
             }
         });
     });
