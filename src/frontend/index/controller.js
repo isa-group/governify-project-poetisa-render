@@ -158,11 +158,16 @@ var updateColors = () => {
                     .replace(/&gt;/g, ">")
                     .replace(/&lt;/g, "<")
                     .replace(/&quot;/g, '"');
-                console.log(objective);
+                console.log("Objective: " + objective);
                 // let condition = value.split("+")[0];
                 // condition = condition + " " + value.split(" ")[1] + " " + value.split(" ")[2];
                 if (objective === value) {
-                    $scope.model.terms.guarantees[$scope.guaranteeIndex].of[index].color = 'red';
+                    console.log("value: " + value);
+                    if ($scope.result.noData.includes(value.split(" ")[0])) {
+                        $scope.model.terms.guarantees[$scope.guaranteeIndex].of[index].color = 'gray';
+                    } else {
+                        $scope.model.terms.guarantees[$scope.guaranteeIndex].of[index].color = 'red';
+                    }
                 }
             } else {
                 var count = 0;
@@ -177,7 +182,11 @@ var updateColors = () => {
                     }
                 });
                 if (count > 0) {
-                    $scope.model.terms.guarantees[$scope.guaranteeIndex].of[index].color = 'red';
+                    if ($scope.result.noData.includes(value.split(" ")[0])) {
+                        $scope.model.terms.guarantees[$scope.guaranteeIndex].of[index].color = 'gray';
+                    } else {
+                        $scope.model.terms.guarantees[$scope.guaranteeIndex].of[index].color = 'red';
+                    }
                 }
             }
         });
