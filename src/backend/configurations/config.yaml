@@ -1,5 +1,5 @@
 production:
-  server: 
+  server:
     port: 80
     timeout: 86400000
     bodySize: 50mb
@@ -9,11 +9,9 @@ production:
     servePackageInfo: true
     listenOnHttps: false
     enableHTTPBasicAuth: true
-
-
   log:
     level: info
-    file: './logs/pro-logs.log' #Where log file will be saved. Date will be concatenated before the name.
+    file: "./logs/pro-logs.log" #Where log file will be saved. Date will be concatenated before the name.
     maxSize: 10000000 #(10MB) Maximum file log size, if one file reaches it, a new file is created.
     maxFiles: 30 # Max Files that can be created per day reaching the maxSize.
   auth:
@@ -21,7 +19,7 @@ production:
     password: isa
 
 development:
-  server: 
+  server:
     port: 8088
     timeout: 86400000
     bodySize: 50mb
@@ -31,14 +29,12 @@ development:
     servePackageInfo: true
     listenOnHttps: false
     enableHTTPBasicAuth: true
-    
   auth:
     user: isa
     password: isa
-  
   log:
     level: debug
-    file: './logs/dev-logs.log' #Where log file will be saved. Date will be concatenated before the name.
+    file: "./logs/dev-logs.log" #Where log file will be saved. Date will be concatenated before the name.
     maxSize: 10000000 #(10MB) Maximum file log size, if one file reaches it, a new file is created.
     maxFiles: 30 # Max Files that can be created per day reaching the maxSize.
 
@@ -53,12 +49,11 @@ testing:
     servePackageInfo: true
     listenOnHttps: false
     enableHTTPBasicAuth: false
-
   auth:
     user: isa
     password: isa
   log:
-    file: './logs/test-logs.log' #Where log file will be saved. Date will be concatenated before the name.
+    file: "./logs/test-logs.log" #Where log file will be saved. Date will be concatenated before the name.
     maxSize: 10000000 #(10MB) Maximum file log size, if one file reaches it, a new file is created.
     maxFiles: 30 # Max Files that can be created per day reaching the maxSize.
-  
+

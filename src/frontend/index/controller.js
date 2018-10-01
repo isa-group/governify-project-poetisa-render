@@ -33,10 +33,13 @@ $scope.newMetric;
 $scope.metric = {};
 $scope.guarantee = {};
 $scope.reward = {};
+$scope.initialDate = $scope.model.terms.pricing.billing.initial.split("T")[0];
+$scope.initialYear = $scope.initialDate.split("-")[0];
+$scope.initialMonth = $scope.initialDate.split("-")[1];
+$scope.initialDay = $scope.initialDate.split("-")[2];
 $scope.isResult = false;
 // var url = "http://localhost/api/v1/translator";
 var url = "http://localhost:5050/api/v1/translator";
-
 
 $scope.restart = function () {
     $scope.sco = "G_POETISA";
@@ -52,12 +55,18 @@ $scope.restart = function () {
     $scope.guarantee = {};
     $scope.reward = {};
     $scope.isResult = false;
+    $scope.initialDate = $scope.model.terms.pricing.billing.initial.split("T")[0];
+    $scope.initialYear = $scope.initialDate.split("-")[0];
+    $scope.initialMonth = $scope.initialDate.split("-")[1];
+    $scope.initialDay = $scope.initialDate.split("-")[2];
     location.reload(true);
 };
 
 $scope.execute = function () {
     // console.log("year: " + $scope.year + " month: " + $scope.month + " day: " + $scope.day);
     var date = $scope.year + "-" + $scope.month + "-" + $scope.day;
+    $scope.model.terms.pricing.billing.initial = $scope.initialYear + ("-") + $scope.initialMonth + ("-") + $scope.initialDay + "T" + $scope.model.terms.pricing.billing.initial.split("T")[1];
+    console.log("Inital: " + $scope.model.terms.pricing.billing.initial);
     console.log("date: " + date);
     postUrl(url + "?date=" + date, (JSON.stringify($scope.model)));
 };
@@ -76,7 +85,8 @@ var postUrl = (url, data, callback) => {
             .replace(/&amp;/g, "&")
             .replace(/&gt;/g, ">")
             .replace(/&lt;/g, "<")
-            .replace(/&quot;/g, '"');
+            .replace(/&quot;/g, '"')
+            .replace(/&nbsp;/g, ' ');
     }
     // console.log("data: " + data);
     $.ajax({
@@ -115,10 +125,19 @@ var updateColors = () => {
         $scope.model.terms.pricing.billing.rewards[$scope.rewardsIndex].of[index].color = 'red';
         if ($scope.metricsName.indexOf(element.condition.split(" ")[0]) == -1) {
             $scope.model.terms.pricing.billing.rewards[$scope.rewardsIndex].of[index].color = 'orange';
-            console.log(element.condition);
+            console.log("con " + element.condition);
         }
         $scope.resultMessage.forEach(value => {
-            if (element.condition === value) {
+            value = value.replace(/&amp;/g, "&")
+                .replace(/&gt;/g, ">")
+                .replace(/&lt;/g, "<")
+                .replace(/&quot;/g, '"');
+            var elem = element.condition.replace(/&amp;/g, "&")
+                .replace(/&gt;/g, ">")
+                .replace(/&lt;/g, "<")
+                .replace(/&quot;/g, '"')
+                .replace(/&nbsp;/g, ' ');
+            if (elem === value) {
                 $scope.model.terms.pricing.billing.rewards[$scope.rewardsIndex].of[index].color = 'green';
             }
         });
@@ -167,6 +186,7 @@ var updateColors = () => {
 };
 
 
+/** Add guarantee */
 $scope.addGuarantee = function () {
     $scope.guarantee.window.initial = new Date();
     $scope.guarantee.window.type = "static";
@@ -174,7 +194,7 @@ $scope.addGuarantee = function () {
     $scope.model.terms.guarantees[$scope.guaranteeIndex].of.push($scope.guarantee);
     $scope.guarantee = {};
 };
-
+/** Delete guarantee */
 $scope.isGuarantee = function () {
     return $scope.metricsName.indexOf($scope.sco) === -1;
 };
@@ -192,12 +212,14 @@ $scope.setGuaranteeIndex = function (sco, guarantees) {
     }
 };
 
+/** Add reward */
 $scope.addReward = function () {
     console.log("Reward: " + $scope.reward);
     $scope.model.terms.pricing.billing.rewards[$scope.rewardsIndex].of.push($scope.reward);
     $scope.reward = {};
 };
 
+/** Add metric */
 $scope.addMetric = function () {
     $scope.metricsName.push($scope.newMetric);
     var aux = $scope.metric;
@@ -206,18 +228,21 @@ $scope.addMetric = function () {
     $scope.metric = {};
 };
 
+/** Delete metric */
 $scope.deleteMetric = function (metric) {
     var indexMetric = $scope.metricsName.indexOf(metric);
     $scope.metricsName.splice(indexMetric, 1);
     delete $scope.model.terms.metrics[metric];
 };
 
+/** Delete objective */
 $scope.deleteObjective = function (objective) {
     console.log(objective.objective);
     var indexObjective = $scope.model.terms.guarantees[$scope.guaranteeIndex].of.indexOf(objective);
     $scope.model.terms.guarantees[$scope.guaranteeIndex].of.splice(indexObjective, 1);
 };
 
+/** Delete reward */
 $scope.deleteReward = function (reward) {
     console.log(reward);
     var indexReward = $scope.model.terms.pricing.billing.rewards[$scope.rewardsIndex].of.indexOf(reward);

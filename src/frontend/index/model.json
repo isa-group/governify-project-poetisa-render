@@ -1,181 +1,187 @@
 {
-    "id": "ANS-POETISA",
-    "version": "1.0",
-    "type": "agreement",
-    "context": {
-        "iAgree": "2.0",
-        "provider": "https://www.isotrol.com/",
-        "consumer": "http://www.juntadeandalucia.es/",
-        "validity": {
-            "timeZone": "Europe/Madrid",
-            "initial": "2018-05-01T00:00:00.000Z"
-        },
-        "definitions": {
-            "schemas": {
-                "BillingDiscount": {
-                    "description": "Percentage to be discounted at the next monthly bill",
-                    "type": "double",
-                    "unit": "%"
-                }
-            },
-            "scopes": {
-                "node": {
-                    "name": "Node",
-                    "description": "identifier for a node in the platform",
-                    "type": "string"
-                },
-                "impact": {
-                    "name": "Impact",
-                    "description": "the impact of the node on the platform",
-                    "type": "string"
-                }
-            }
-        },
-        "infrastructure": {
-            "designer": "http://designer.governify.io",
-            "billing": "http://pricing.governify.io/billing"
-        }
+  "id": "ANS-POETISA",
+  "version": "1.0",
+  "type": "agreement",
+  "context": {
+    "iAgree": "5.0",
+    "provider": "https://www.isotrol.com/",
+    "consumer": "http://www.juntadeandalucia.es/",
+    "validity": {
+      "timeZone": "Europe/Madrid",
+      "initial": "2018-05-01T00:00:00.000Z"
     },
-    "terms": {
-        "pricing": {
-            "currency": "EUR",
-            "billing": {
-                "period": "monthly",
-                "initial": "2018-04-28T10:35:36.000Z",
-                "rewards": [{
-                    "over": {
-                        "BillingDiscount": {
-                            "$ref": "#/context/definitions/schemas/BillingDiscount"
-                        }
-                    },
-                    "aggregatedBy": "sum",
-                    "of": [{
-                            "value": "10",
-                            "condition": "AMC < 30"
-                        },
-                        {
-                            "value": "10",
-                            "condition": "AMC < 20"
-                        },
-                        {
-                            "value": "5",
-                            "condition": "AMC < 15"
-                        },
-                        {
-                            "value": "10",
-                            "condition": "ACL < 1"
-                        },
-                        {
-                            "value": "10",
-                            "condition": "ACL < 0.5"
-                        },
-                        {
-                            "value": "5",
-                            "condition": "ACL < 0.25"
-                        },
-                        {
-                            "value": "10",
-                            "condition": "ODS < 2"
-                        },
-                        {
-                            "value": "10",
-                            "condition": "ODS < 1"
-                        },
-                        {
-                            "value": "5",
-                            "condition": "ODS < 0.5"
-                        }
-                    ]
-                }]
-            }
+    "definitions": {
+      "schemas": {
+        "BillingDiscount": {
+          "description": "Percentage to be discounted at the next monthly bill",
+          "type": "double",
+          "unit": "%"
+        }
+      },
+      "scopes": {
+        "node": {
+          "name": "Node",
+          "description": "identifier for a node in the platform",
+          "type": "string"
         },
-        "metrics": {
-            "AMC": {
-                "schema": {
-                    "description": "Average memory consumption",
-                    "type": "double",
-                    "minimum": 0,
-                    "maximum": 100,
-                    "unit": "GB"
-                },
-                "computer": "http://localhost:5001/api/v2/AMC"
-            },
-            "ACL": {
-                "schema": {
-                    "description": "CPU load",
-                    "type": "double",
-                    "minimum": 0,
-                    "maximum": 1,
-                    "unit": "%"
-                },
-                "computer": "http://localhost:5001/api/v2/ACL"
-            },
-            "ODS": {
-                "schema": {
-                    "description": "Occupied disk space",
-                    "type": "double",
-                    "minimum": 0,
-                    "maximum": 10,
-                    "unit": "TB"
-                },
-                "computer": "http://localhost:5001/api/v2/ODS"
-            },
-            "AVA": {
-                "schema": {
-                    "description": "Uptime",
-                    "type": "double",
-                    "unit": "%"
-                },
-                "computer": "http://localhost:5001/api/v2/AVA"
-            }
-        },
-        "guarantees": [{
-            "id": "G_AVA",
-            "scope": {
-                "priority": {
-                    "$ref": "#/context/definitions/scopes/impact"
-                },
-                "node": {
-                    "$ref": "#/context/definitions/scopes/node"
-                }
-            },
-            "of": [{
-                    "scope": {
-                        "node": "k-mysql",
-                        "impact": "high"
-                    },
-                    "objective": "AVA >= 99.00",
-                    "window": {
-                        "type": "static",
-                        "period": "monthly",
-                        "initial": "2018-05-01T00:00:00.000Z"
-                    }
-                },
-                {
-                    "scope": {
-                        "node": "api-metrics, api-translator",
-                        "impact": "medium"
-                    },
-                    "objective": "AVA >= 95.00",
-                    "window": {
-                        "type": "static",
-                        "period": "monthly",
-                        "initial": "2018-05-01T00:00:00.000Z"
-                    }
-                },
-                {
-                    "scope": {
-                        "node": "k-portal",
-                        "impact": "low"
-                    },
-                    "objective": "AVA >= 90.00",
-                    "window": {
-                        "type": "static",
-                        "period": "monthly",
-                        "initial": "2018-05-01T00:00:00.000Z"
-                    }
-                }
-            ]
-        }]
+        "impact": {
+          "name": "Impact",
+          "description": "the impact of the node on the platform",
+          "type": "string"
+        }
+      }
+    },
+    "infrastructure": {
+      "designer": "http://designer.governify.io",
+      "billing": "http://pricing.governify.io/billing"
     }
+  },
+  "terms": {
+    "pricing": {
+      "currency": "EUR",
+      "billing": {
+        "period": "monthly",
+        "initial": "2018-04-28T10:35:36.000Z",
+        "rewards": [
+          {
+            "over": {
+              "BillingDiscount": {
+                "$ref": "#/context/definitions/schemas/BillingDiscount"
+              }
+            },
+            "aggregatedBy": "sum",
+            "of": [
+              {
+                "value": "10",
+                "condition": "AMC < 30"
+              },
+              {
+                "value": "10",
+                "condition": "AMC < 20"
+              },
+              {
+                "value": "5",
+                "condition": "AMC < 15"
+              },
+              {
+                "value": "10",
+                "condition": "ACL < 1"
+              },
+              {
+                "value": "10",
+                "condition": "ACL < 0.5"
+              },
+              {
+                "value": "5",
+                "condition": "ACL < 0.25"
+              },
+              {
+                "value": "10",
+                "condition": "ODS < 2"
+              },
+              {
+                "value": "10",
+                "condition": "ODS < 1"
+              },
+              {
+                "value": "5",
+                "condition": "ODS < 0.5"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "metrics": {
+      "AMC": {
+        "schema": {
+          "description": "Average memory consumption",
+          "type": "double",
+          "minimum": 0,
+          "maximum": 100,
+          "unit": "GB"
+        },
+        "computer": "http://localhost:30500/api/v2/AMC"
+      },
+      "ACL": {
+        "schema": {
+          "description": "CPU load",
+          "type": "double",
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "%"
+        },
+        "computer": "http://localhost:30500/api/v2/ACL"
+      },
+      "ODS": {
+        "schema": {
+          "description": "Occupied disk space",
+          "type": "double",
+          "minimum": 0,
+          "maximum": 10,
+          "unit": "TB"
+        },
+        "computer": "http://localhost:30500/api/v2/ODS"
+      },
+      "AVA": {
+        "schema": {
+          "description": "Uptime",
+          "type": "double",
+          "unit": "%"
+        },
+        "computer": "http://localhost:30500/api/v2/AVA"
+      }
+    },
+    "guarantees": [
+      {
+        "id": "G_AVA",
+        "scope": {
+          "priority": {
+            "$ref": "#/context/definitions/scopes/impact"
+          },
+          "node": {
+            "$ref": "#/context/definitions/scopes/node"
+          }
+        },
+        "of": [
+          {
+            "scope": {
+              "node": "k-mysql",
+              "impact": "high"
+            },
+            "objective": "AVA >= 99.00",
+            "window": {
+              "type": "static",
+              "period": "monthly",
+              "initial": "2018-05-01T00:00:00.000Z"
+            }
+          },
+          {
+            "scope": {
+              "node": "api-metrics, api-translator",
+              "impact": "medium"
+            },
+            "objective": "AVA >= 95.00",
+            "window": {
+              "type": "static",
+              "period": "monthly",
+              "initial": "2018-05-01T00:00:00.000Z"
+            }
+          },
+          {
+            "scope": {
+              "node": "k-portal",
+              "impact": "low"
+            },
+            "objective": "AVA >= 90.00",
+            "window": {
+              "type": "static",
+              "period": "monthly",
+              "initial": "2018-05-01T00:00:00.000Z"
+            }
+          }
+        ]
+      }
+    ]
+  }
 }
