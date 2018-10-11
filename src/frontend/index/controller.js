@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 $scope.sco = "G_PDN";
 $scope.guaranteeIndex = 0;
 $scope.rewardsIndex = 0;
-$scope.metricsName = ["AVA", "AMC", "ACL", "ODS"];
+$scope.metricsName = ["AVA", "AMC", "ACL", "DU", "NM", "NDM"];
 $scope.operators = ["==", "=>", "<=", ">", "<"];
 $scope.result = [];
 $scope.resultMessage = [];
@@ -38,14 +38,14 @@ $scope.initialYear = $scope.initialDate.split("-")[0];
 $scope.initialMonth = $scope.initialDate.split("-")[1];
 $scope.initialDay = $scope.initialDate.split("-")[2];
 $scope.isResult = false;
-// var url = "http://localhost/api/v1/translator";
-var url = "http://localhost:5050/api/v1/translator";
+var url = "http://localhost/api/v1/billing";
+// var url = "http://localhost:5050/api/v1/billing";
 
 $scope.restart = function () {
     $scope.sco = "G_POETISA";
     $scope.guaranteeIndex = 0;
     $scope.rewardsIndex = 0;
-    $scope.metricsName = ["AVA", "AMC", "ACL", "ODS"];
+    $scope.metricsName = ["AVA", "AMC", "ACL", "DU", "NM", "NDM"];
     $scope.operators = ["==", "=>", "<=", ">", "<"];
     $scope.result = [];
     $scope.resultMessage = [];
@@ -98,6 +98,7 @@ var postUrl = (url, data, callback) => {
             // console.log(body);
             $scope.isResult = true;
             $scope.result = body[0];
+            console.log($scope.result);
             $scope.result.message.forEach(element => {
                 let res = element.split("->")[1];
                 if (element.split("->")[0] === 'not guarantees ') {

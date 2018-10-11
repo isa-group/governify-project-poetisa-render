@@ -42,54 +42,81 @@
       "billing": {
         "period": "monthly",
         "initial": "2018-04-28T10:35:36.000Z",
-        "rewards": [
-          {
-            "over": {
-              "BillingDiscount": {
-                "$ref": "#/context/definitions/schemas/BillingDiscount"
-              }
+        "cost": {
+          "over": {
+            "MonthlyCost": {
+              "$ref": "#/context/definitions/schemas/MonthlyCost"
             },
-            "aggregatedBy": "sum",
-            "of": [
-              {
-                "value": "10",
-                "condition": "AMC < 30"
-              },
-              {
-                "value": "10",
-                "condition": "AMC < 20"
-              },
-              {
-                "value": "5",
-                "condition": "AMC < 15"
-              },
-              {
-                "value": "10",
-                "condition": "ACL < 1"
-              },
-              {
-                "value": "10",
-                "condition": "ACL < 0.5"
-              },
-              {
-                "value": "5",
-                "condition": "ACL < 0.25"
-              },
-              {
-                "value": "10",
-                "condition": "ODS < 2"
-              },
-              {
-                "value": "10",
-                "condition": "ODS < 1"
-              },
-              {
-                "value": "5",
-                "condition": "ODS < 0.5"
-              }
-            ]
-          }
-        ]
+            "baseCost": {
+              "DPC": 0.78
+            }
+          },
+          "of": [{
+              "value": "DPC*150*NDM",
+              "condition": "NM < 150",
+              "with": [
+                "DPC",
+                "NM",
+                "NDM"
+              ]
+            },
+            {
+              "value": "DPC*NM*NDM",
+              "condition": "NM > 150",
+              "with": [
+                "DPC",
+                "NM",
+                "NDM"
+              ]
+
+            }
+          ]
+        },
+        "rewards": [{
+          "over": {
+            "BillingDiscount": {
+              "$ref": "#/context/definitions/schemas/BillingDiscount"
+            }
+          },
+          "aggregatedBy": "sum",
+          "of": [{
+              "value": "10",
+              "condition": "AMC < 30"
+            },
+            {
+              "value": "10",
+              "condition": "AMC < 20"
+            },
+            {
+              "value": "5",
+              "condition": "AMC < 15"
+            },
+            {
+              "value": "10",
+              "condition": "ACL < 1"
+            },
+            {
+              "value": "10",
+              "condition": "ACL < 0.5"
+            },
+            {
+              "value": "5",
+              "condition": "ACL < 0.25"
+            },
+            {
+              "value": "10",
+              "condition": "DU < 2"
+            },
+            {
+              "value": "10",
+              "condition": "DU < 1"
+            },
+            {
+              "value": "5",
+              "condition": "DU < 0.5"
+            }
+          ]
+        }]
       }
     },
     "metrics": {
@@ -101,7 +128,7 @@
           "maximum": 100,
           "unit": "GB"
         },
-        "computer": "http://localhost:30500/api/v2/AMC"
+        "computer": "http://10.96.0.100/api/v2/AMC"
       },
       "ACL": {
         "schema": {
@@ -111,17 +138,17 @@
           "maximum": 1,
           "unit": "%"
         },
-        "computer": "http://localhost:30500/api/v2/ACL"
+        "computer": "http://10.96.0.100/api/v2/ACL"
       },
-      "ODS": {
+      "DU": {
         "schema": {
-          "description": "Occupied disk space",
+          "description": "Disk usage",
           "type": "double",
           "minimum": 0,
           "maximum": 10,
           "unit": "TB"
         },
-        "computer": "http://localhost:30500/api/v2/ODS"
+        "computer": "http://10.96.0.100/api/v2/DU"
       },
       "AVA": {
         "schema": {
@@ -129,59 +156,72 @@
           "type": "double",
           "unit": "%"
         },
-        "computer": "http://localhost:30500/api/v2/AVA"
+        "computer": "http://10.96.0.100/api/v2/AVA"
+      },
+      "NM": {
+        "schema": {
+          "description": "Number of moodle",
+          "type": "integer",
+          "unit": "nº"
+        },
+        "computer": "http://10.96.0.100/api/v2/PN&pod_name=moodle"
+      },
+      "NDM": {
+        "schema": {
+          "description": "Number of days pf the month",
+          "type": "integer",
+          "unit": "nº"
+        },
+        "computer": "http://10.96.0.100/api/v2/ND"
       }
     },
-    "guarantees": [
-      {
-        "id": "G_AVA",
-        "scope": {
-          "priority": {
-            "$ref": "#/context/definitions/scopes/impact"
+    "guarantees": [{
+      "id": "G_AVA",
+      "scope": {
+        "priority": {
+          "$ref": "#/context/definitions/scopes/impact"
+        },
+        "node": {
+          "$ref": "#/context/definitions/scopes/node"
+        }
+      },
+      "of": [{
+          "scope": {
+            "node": "k-mysql",
+            "impact": "high"
           },
-          "node": {
-            "$ref": "#/context/definitions/scopes/node"
+          "objective": "AVA >= 99.00",
+          "window": {
+            "type": "static",
+            "period": "monthly",
+            "initial": "2018-05-01T00:00:00.000Z"
           }
         },
-        "of": [
-          {
-            "scope": {
-              "node": "k-mysql",
-              "impact": "high"
-            },
-            "objective": "AVA >= 99.00",
-            "window": {
-              "type": "static",
-              "period": "monthly",
-              "initial": "2018-05-01T00:00:00.000Z"
-            }
+        {
+          "scope": {
+            "node": "api-metrics, api-translator",
+            "impact": "medium"
           },
-          {
-            "scope": {
-              "node": "api-metrics, api-translator",
-              "impact": "medium"
-            },
-            "objective": "AVA >= 95.00",
-            "window": {
-              "type": "static",
-              "period": "monthly",
-              "initial": "2018-05-01T00:00:00.000Z"
-            }
-          },
-          {
-            "scope": {
-              "node": "k-portal",
-              "impact": "low"
-            },
-            "objective": "AVA >= 90.00",
-            "window": {
-              "type": "static",
-              "period": "monthly",
-              "initial": "2018-05-01T00:00:00.000Z"
-            }
+          "objective": "AVA >= 95.00",
+          "window": {
+            "type": "static",
+            "period": "monthly",
+            "initial": "2018-05-01T00:00:00.000Z"
           }
-        ]
-      }
-    ]
+        },
+        {
+          "scope": {
+            "node": "k-portal",
+            "impact": "low"
+          },
+          "objective": "AVA >= 90.00",
+          "window": {
+            "type": "static",
+            "period": "monthly",
+            "initial": "2018-05-01T00:00:00.000Z"
+          }
+        }
+      ]
+    }]
   }
 }

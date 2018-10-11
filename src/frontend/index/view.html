@@ -185,10 +185,19 @@
 <!-- Results -->
 <div ng-show="isResult" style="margin-top: 40px">
     <h2>Result: </h2>
-
+    <h3>The bill
+        <strong style="background-color: #d6f5d6">
+            <span contenteditable format="string " ng-model="result.bill"></span>
+        </strong>
+    </h3>
     <h3>Percentage discount applied to the bill
         <strong style="background-color: #d6f5d6">
             <span contenteditable format="string " ng-model="result.percentage"></span>%
+        </strong>
+    </h3>
+    <h3>The bill with the rewards
+        <strong style="background-color: #d6f5d6">
+            <span contenteditable format="string " ng-model="result.billWithDiscount"></span>
         </strong>
     </h3>
     <!-- messages from the result  -->
@@ -201,6 +210,14 @@
 </div>
 <p class=" separator "></p>
 <!-- Information of the billing -->
+<!-- Billing -->
+<table class="table no-spacing">
+    <tr>
+        <td colspan="2" style=" text-align: center; font-size: 1.6em; background-color: #f7f7f7; color: black;">
+            Billing
+        </td>
+    </tr>
+</table>
 <table class="table ">
     <tr>
         <td class="title description">Initial billing day</td>
@@ -277,6 +294,27 @@
         </td>
     </tr>
 </table>
+<table class="table ">
+    <tr>
+        <td colspan="12" class="title description" style="text-align: center;">Rules</td>
+    </tr>
+    <tr ng-repeat="of_c in model.terms.pricing.billing.cost.of">
+        <td class="title description"> Condition </td>
+        <td colspan="2" style="text-align: center; background-color: #ffffff">
+            <span contenteditable ng-model="of_c.condition"></span>
+        </td>
+        <td class="title description"> Value</td>
+        <td colspan="2" style="text-align: center; background-color: #ffffff">
+            <span contenteditable ng-model="of_c.value"></span>
+        </td>
+    </tr>
+    <tr>
+        <td class="title description" colspan="3">Base cost (DPC)</td>
+        <td colspan="3">
+            <span contenteditable ng-model="model.terms.pricing.billing.cost.over.baseCost.DPC"></span>
+        </td>
+    </tr>
+</table>
 <!-- Metrics -->
 <table class="table no-spacing">
     <tr>
@@ -299,8 +337,8 @@
         <td colspan="2 ">
             <span contenteditable ng-model="model.terms.metrics[metric].schema.description"></span>
         </td>
-        <td class="title description ">Computer </td>
-        <td>
+        <td class="title description">Computer </td>
+        <td style="white-space: nowrap; text-overflow:clip; overflow:auto; max-width:120px;">
             <span contenteditable ng-model="model.terms.metrics[metric].computer"></span>
         </td>
         <td class="title ">Unit</td>
