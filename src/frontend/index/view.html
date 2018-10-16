@@ -184,22 +184,41 @@
 </button>
 <!-- Results -->
 <div ng-show="isResult" style="margin-top: 40px">
-    <h2>Result: </h2>
-    <h3>The bill
-        <strong style="background-color: #d6f5d6">
-            <span contenteditable format="string " ng-model="result.bill"></span>
-        </strong>
-    </h3>
-    <h3>Percentage discount applied to the bill
-        <strong style="background-color: #d6f5d6">
-            <span contenteditable format="string " ng-model="result.percentage"></span>%
-        </strong>
-    </h3>
-    <h3>The bill with the rewards
-        <strong style="background-color: #d6f5d6">
-            <span contenteditable format="string " ng-model="result.billWithDiscount"></span>
-        </strong>
-    </h3>
+    <table class="table no-spacing">
+        <tr>
+            <td colspan="2" style=" text-align: center; font-size: 1.6em; background-color: #f7f7f7; color: black;">
+                Billing
+            </td>
+        </tr>
+    </table>
+    <table class="table ">
+        <tr>
+            <td class="title description">Billing date</td>
+            <td> <strong style="background-color: #d6f5d6">
+                    <span format="string " ng-model="result.bill.billingDate">{{result.bill.billingDate}}</span>
+                </strong>
+            </td>
+
+            <td class="title description">Percentage discount </td>
+            <td> <strong style="background-color: #d6f5d6">
+                    <span format="string " ng-model="result.percentage">{{result.percentage}} </span>%
+                </strong>
+            </td>
+
+        </tr>
+        <tr>
+            <td class="title description">Sub-total</td>
+            <td> <strong style="background-color: #d6f5d6">
+                    <span ng-model="result.bill.totalWithout"> {{result.bill.totalWithout}}</span>
+                </strong>
+            </td>
+            <td class="title description">Total</td>
+            <td> <strong style="background-color: #d6f5d6">
+                    <span format="string " ng-model="result.bill.total">{{result.bill.total}}</span>
+                </strong>
+            </td>
+        </tr>
+    </table>
     <!-- messages from the result  -->
     <!-- <div ng-repeat="message in result.message">
         <span contenteditable format="string " ng-model="message"></span>
@@ -214,7 +233,7 @@
 <table class="table no-spacing">
     <tr>
         <td colspan="2" style=" text-align: center; font-size: 1.6em; background-color: #f7f7f7; color: black;">
-            Billing
+            Agreement
         </td>
     </tr>
 </table>
