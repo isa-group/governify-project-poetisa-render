@@ -167,7 +167,7 @@
     </div>
     <!-- Buttons of dashboard and refresh -->
     <div class="col-sm-4 text-right">
-        <a target="_blank" href="http://localhost:30300/dashboard/db/kubernetes-pod-statistics-via-heapster-and-influxdb?orgId=1&from=now%2Fw&to=now&var-ns=default&var-name="
+        <a target="_blank" href="http://localhost:30300/dashboard/db/kubernetes-pod-statistics?orgId=1&var-ns=default&var-name=All"
             class="btn btn-success">
             Dashboard
             <span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>
@@ -198,24 +198,25 @@
                     <span format="string " ng-model="result.bill.billingDate">{{result.bill.billingDate}}</span>
                 </strong>
             </td>
-
-            <td class="title description">Percentage discount </td>
-            <td> <strong style="background-color: #d6f5d6">
-                    <span format="string " ng-model="result.percentage">{{result.percentage}} </span>%
-                </strong>
-            </td>
-
-        </tr>
-        <tr>
-            <td class="title description">Sub-total</td>
-            <td> <strong style="background-color: #d6f5d6">
-                    <span ng-model="result.bill.totalWithout"> {{result.bill.totalWithout}}</span>
-                </strong>
-            </td>
             <td class="title description">Total</td>
             <td> <strong style="background-color: #d6f5d6">
                     <span format="string " ng-model="result.bill.total">{{result.bill.total}}</span>
                 </strong>
+            </td>
+        </tr>
+    </table>
+    <table class="table ">
+        <tr>
+            <td colspan="12" class="title description" style="text-align: center;">Concepts</td>
+        </tr>
+        <tr ng-repeat="of_c in result.bill.concepts">
+            <td class="title description"> Description </td>
+            <td colspan="2" style="text-align: center; background-color: #ffffff">
+                <span contenteditable ng-model="of_c.description"></span>
+            </td>
+            <td class="title description"> Value</td>
+            <td colspan="2" style="text-align: center; background-color: #ffffff">
+                <span contenteditable ng-model="of_c.subtotal"></span>
             </td>
         </tr>
     </table>

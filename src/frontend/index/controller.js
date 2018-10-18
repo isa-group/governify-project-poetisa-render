@@ -38,8 +38,8 @@ $scope.initialYear = $scope.initialDate.split("-")[0];
 $scope.initialMonth = $scope.initialDate.split("-")[1];
 $scope.initialDay = $scope.initialDate.split("-")[2];
 $scope.isResult = false;
-var url = "http://localhost/api/v1/billing";
-// var url = "http://localhost:5050/api/v1/billing";
+// var url = "http://localhost/api/v1/billing";
+var url = "http://localhost:5050/api/v1/billing";
 
 $scope.restart = function () {
     $scope.sco = "G_POETISA";
