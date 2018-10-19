@@ -20,8 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.*/
 $scope.sco = "G_PDN";
 $scope.guaranteeIndex = 0;
 $scope.rewardsIndex = 0;
-$scope.metricsName = ["AVA", "AMC", "ACL", "DU", "NM", "NDM"];
-$scope.operators = ["==", "=>", "<=", ">", "<"];
+$scope.metricsName = $scope.metricsName = Object.keys($scope.model.terms.metrics);
+console.log($scope.metricsName);
 $scope.result = [];
 $scope.resultMessage = [];
 $scope.resultConditions = [];
@@ -38,14 +38,14 @@ $scope.initialYear = $scope.initialDate.split("-")[0];
 $scope.initialMonth = $scope.initialDate.split("-")[1];
 $scope.initialDay = $scope.initialDate.split("-")[2];
 $scope.isResult = false;
-// var url = "http://localhost/api/v1/billing";
-var url = "http://localhost:5050/api/v1/billing";
+var url = "http://localhost/api/v1/billing";
+// var url = "http://localhost:5050/api/v1/billing";
 
 $scope.restart = function () {
     $scope.sco = "G_POETISA";
     $scope.guaranteeIndex = 0;
     $scope.rewardsIndex = 0;
-    $scope.metricsName = ["AVA", "AMC", "ACL", "DU", "NM", "NDM"];
+    $scope.metricsName = Object.keys($scope.model.terms.metrics);
     $scope.operators = ["==", "=>", "<=", ">", "<"];
     $scope.result = [];
     $scope.resultMessage = [];
