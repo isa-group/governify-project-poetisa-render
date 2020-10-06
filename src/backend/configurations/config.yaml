@@ -15,8 +15,8 @@ production:
     maxSize: 10000000 #(10MB) Maximum file log size, if one file reaches it, a new file is created.
     maxFiles: 30 # Max Files that can be created per day reaching the maxSize.
   auth:
-    user: isa
-    password: isa
+    user: poetisa
+    password: poetisa
 
 development:
   server:
@@ -30,8 +30,8 @@ development:
     listenOnHttps: false
     enableHTTPBasicAuth: true
   auth:
-    user: isa
-    password: isa
+    user: poetisa
+    password: poetisa
   log:
     level: debug
     file: "./logs/dev-logs.log" #Where log file will be saved. Date will be concatenated before the name.
@@ -50,8 +50,8 @@ testing:
     listenOnHttps: false
     enableHTTPBasicAuth: false
   auth:
-    user: isa
-    password: isa
+    user: poetisa
+    password: poetisa
   log:
     file: "./logs/test-logs.log" #Where log file will be saved. Date will be concatenated before the name.
     maxSize: 10000000 #(10MB) Maximum file log size, if one file reaches it, a new file is created.
