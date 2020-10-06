@@ -128,7 +128,7 @@
           "maximum": 100,
           "unit": "GB"
         },
-        "computer": "http://10.96.0.100/api/v2/AMC"
+        "computer": "http://localhost:5001/api/v2/AMC"
       },
       "ACL": {
         "schema": {
@@ -138,7 +138,7 @@
           "maximum": 1,
           "unit": "%"
         },
-        "computer": "http://10.96.0.100/api/v2/ACL"
+        "computer": "http://localhost:5001/api/v2/ACL"
       },
       "DU": {
         "schema": {
@@ -148,7 +148,7 @@
           "maximum": 10,
           "unit": "TB"
         },
-        "computer": "http://10.96.0.100/api/v2/DU"
+        "computer": "http://localhost:5001/api/v2/DU"
       },
       "AVA": {
         "schema": {
@@ -156,7 +156,7 @@
           "type": "double",
           "unit": "%"
         },
-        "computer": "http://10.96.0.100/api/v2/AVA"
+        "computer": "http://localhost:5001/api/v2/AVA"
       },
       "NM": {
         "schema": {
@@ -164,7 +164,7 @@
           "type": "integer",
           "unit": "nº"
         },
-        "computer": "http://10.96.0.100/api/v2/PN&pod_name=moodle"
+        "computer": "http://localhost:5001/api/v2/PN&pod_name=moodle"
       },
       "NDM": {
         "schema": {
@@ -172,7 +172,7 @@
           "type": "integer",
           "unit": "nº"
         },
-        "computer": "http://10.96.0.100/api/v2/ND"
+        "computer": "http://localhost:5001/api/v2/ND"
       }
     },
     "guarantees": [{
